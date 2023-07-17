@@ -18,9 +18,9 @@ onMount(()=>{
 })
 
  async function fetchData(){
- let res = await fetch(`http://localhost:4000/products/${data.id}`);
- editedProduct = await res.json();
- console.log(editedProduct);
+  let res = await fetch(`http://localhost:4000/products/${data.id}`);
+  editedProduct = await res.json();
+  // console.log(editedProduct);
  }
  
 
@@ -33,7 +33,7 @@ await fetch(`http://localhost:4000/products/${data.id}`, {
 },
  body: JSON.stringify(editedProduct),
 });
-  location.reload();
+  // location.reload();
 }
 
 async function fetchCategory(){
@@ -73,7 +73,8 @@ async function deleteProduct(productId) {
         {/each}
       </select>
     <div>
-      <button on:click={() => { editProduct() }} class="px-8 py-2 my-4 outline-1 rounded">Save</button>
+      <button on:click={() => { editProduct() }} class="text-white border w-24 py-2 my-2 bg-primary rounded-md">Save</button>
+      <button on:click={() => { isEditing = false }} class="border w-24 py-2 mx-4 rounded-md">Cancel</button>
     </div>
     </div>
   </div>

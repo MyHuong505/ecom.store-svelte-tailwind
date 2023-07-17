@@ -1,4 +1,4 @@
-<footer class="flex flex justify-between items-center mx-24 my-8">
+<footer class="bottom-0 left-0 flex flex justify-between items-center mx-24 my-8">
     <p>@Copy right 2023</p>
     <ul class="flex gap-4">
         <li >Country & Region: Singapore</li>

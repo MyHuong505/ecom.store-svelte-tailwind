@@ -25,6 +25,7 @@ async function createProduct(){
     categories = await res.json();
     // console.log(categories);
   }
+  
 onMount(()=>{
   fetchCategory();
 })
@@ -33,17 +34,12 @@ onMount(()=>{
 
 <h1 class="flex justify-center m-8 font-semibold text-xl">Add new product</h1>
 
-<div class="flex  flex-row items-center justify-center border ">
+<div class="flex items-center justify-center">
   <div class="w-full max-w-md p-4 bg-gray-100">
-
       <input type="text" bind:value={newProduct.title} placeholder="Title" class="w-full px-2 py-1 my-2 border border-gray-300 rounded" />
-
       <input type="text" bind:value={newProduct.url} placeholder="Url" class="w-full px-2 py-1 my-2 border border-gray-300 rounded" />
-
       <input type="text" bind:value={newProduct.thumbnailUrl} placeholder="ThumbnailUrl" class="w-full px-2 py-1 my-2 border border-gray-300 rounded" />
-
       <input type="text" bind:value={newProduct.price} placeholder="Price" class="w-full px-2 py-1 my-2 border border-gray-300 rounded" />
-
       <span class="block my-2 text-gray-600">Select category</span>
 
       <select bind:value ={newProduct.categoryId} class="w-full px-2 py-1 mb-2 border border-gray-300 rounded">
