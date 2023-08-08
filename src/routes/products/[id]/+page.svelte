@@ -1,7 +1,8 @@
 <script>
-  import { onMount } from 'svelte';  
+  import { onMount } from 'svelte';
+    
   export let data;
-
+  
 
   let categories =[];
   let product = {
@@ -93,7 +94,21 @@ const addToCart = (product) => {
 const calculateCartTotal = () => {
   totalItems = cart.reduce((total, item) => total + item.quantity, 0);
   totalPrice = cart.reduce((total, item) => total + parseFloat(item.price.replace(/\$/g, ''))* item.quantity, 0);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem('totalItems', totalItems.toString());
+  localStorage.setItem('totalPrice', totalPrice.toString());
 };
+
+onMount(() => {
+    const storedCart = localStorage.getItem('cart');
+    cart = storedCart ? JSON.parse(storedCart) : [];
+
+    const storedTotalItems = localStorage.getItem('totalItems');
+    totalItems = storedTotalItems ? parseInt(storedTotalItems) : 0;
+
+    const storedTotalPrice = localStorage.getItem('totalPrice');
+    totalPrice = storedTotalPrice ? parseFloat(storedTotalPrice) : 0;
+  });
 
 </script>
 
@@ -102,15 +117,17 @@ const calculateCartTotal = () => {
   <p>There are {totalItems} items in your cart</p>
   {#each cart as item}
       <div>
-        <img class="w-16" src={item.thumbnailUrl} alt={item.title}/>
+        <img class="w-12" src={item.thumbnailUrl} alt={item.title}/>
         <h3 class="mt-2 text-stone-700 ">{item.title}</h3>
-        <p class="text-md text-primary">${item.price}</p>
+        <p class="text-md text-primary">{item.price}</p>
         <button on:click={()=>plusItem(item)}>+</button>
-        {totalItems}
+        {item.quantity}
         <button on:click={()=>minusItem(item)}>-</button>
       </div>
+      <div>
+          <p>Total Price: {totalPrice}</p>
+      </div>
   {/each}
-  <p>Total Price: {totalPrice}</p>
 </div>
 
 
