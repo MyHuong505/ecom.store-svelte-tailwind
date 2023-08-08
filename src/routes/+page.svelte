@@ -3,6 +3,7 @@ import { onMount } from 'svelte';
 import HomeProduct from '../component/HomeProduct.svelte';
 import Banner from '../component/Banner.svelte';
 import Footer from '../component/Footer.svelte';
+import Carousel from '../component/Carousel.svelte';
 
 let products = [];
 
@@ -18,6 +19,7 @@ let products = [];
 
 </script>
 
+
 <div class="bg-gray-100">
     <div class="bg-white mx-48 ">
         
@@ -26,7 +28,9 @@ let products = [];
         <div class="flex justify-center">
             <h1 class="text-2xl font-bold text-gray-700">New arrivals</h1>
         </div>
-            <HomeProduct {products} />
+
+        <HomeProduct {products} />
+
         <div class="flex justify-center mt-4 mb-8">
             <a class="font-semibold text-lg text-primary hover:underline" href="/products">View more</a>
         </div>

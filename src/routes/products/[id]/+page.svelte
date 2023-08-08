@@ -1,15 +1,18 @@
 <script>
   import { onMount } from 'svelte';  
   export let data;
+
+
   let categories =[];
-  let editedProduct = {
+  let product = {
     title: "",
     prive:"",
     url: "",
     thumbnailUrl: "",
     categoryId: ""
 };
-let isEditing = false;
+  let isEditing = false;
+
 
 
 onMount(()=>{
@@ -19,8 +22,8 @@ onMount(()=>{
 
  async function fetchData(){
   let res = await fetch(`http://localhost:4000/products/${data.id}`);
-  editedProduct = await res.json();
-  // console.log(editedProduct);
+  product = await res.json();
+  // console.log(product);
  }
  
 
@@ -31,9 +34,9 @@ await fetch(`http://localhost:4000/products/${data.id}`, {
  headers: {
  "Content-Type": "application/json",
 },
- body: JSON.stringify(editedProduct),
+ body: JSON.stringify(product),
 });
-  // location.reload();
+  location.reload();
 }
 
 async function fetchCategory(){
@@ -53,19 +56,75 @@ async function deleteProduct(productId) {
   await fetchData();
 }
 
+let cart = [];  
+let totalItems = 0;
+let totalPrice = 0;
+	
+const addToCart = (product) => {
+  const existingItem = cart.find((item) => item.id === product.id);
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+		cart = [...cart, { ...product, quantity: 1 }];
+	}
+  calculateCartTotal();
+};  
+
+  const plusItem = (product) => {
+    const existingItem = cart.find((item) => item.id === product.id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    }
+    calculateCartTotal();
+  };
+
+  const minusItem = (product) => {
+    const existingItem = cart.find((item) => item.id === product.id);
+    if (existingItem) {
+      if (existingItem.quantity > 1) {
+        existingItem.quantity -= 1;
+      } else {
+        cart = cart.filter((cartItem) => cartItem.id !== existingItem.id);
+      }
+    }
+    calculateCartTotal();
+  };
+
+const calculateCartTotal = () => {
+  totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  totalPrice = cart.reduce((total, item) => total + parseFloat(item.price.replace(/\$/g, ''))* item.quantity, 0);
+};
+
 </script>
+
+
+<div class="cart-list">
+  <p>There are {totalItems} items in your cart</p>
+  {#each cart as item}
+      <div>
+        <img class="w-16" src={item.thumbnailUrl} alt={item.title}/>
+        <h3 class="mt-2 text-stone-700 ">{item.title}</h3>
+        <p class="text-md text-primary">${item.price}</p>
+        <button on:click={()=>plusItem(item)}>+</button>
+        {totalItems}
+        <button on:click={()=>minusItem(item)}>-</button>
+      </div>
+  {/each}
+  <p>Total Price: {totalPrice}</p>
+</div>
+
 
 
 {#if isEditing}
   <p class="flex justify-center m-8 font-semibold text-xl">Update product</p>
   <div class="flex m-8 flex-col items-center justify-center">
     <div class="w-full max-w-md p-4 bg-gray-100">
-      <input type="text" bind:value={editedProduct.title} class="w-full px-2 py-1 my-2 border border-gray-300 rounded" />
-      <input type="text" bind:value={editedProduct.url} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
-      <input type="text" bind:value={editedProduct.thumbnailUrl} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
-      <input type="text" bind:value={editedProduct.price} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
+      <input type="text" bind:value={product.title} class="w-full px-2 py-1 my-2 border border-gray-300 rounded" />
+      <input type="text" bind:value={product.url} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
+      <input type="text" bind:value={product.thumbnailUrl} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
+      <input type="text" bind:value={product.price} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
 
-      <select bind:value={editedProduct.categoryId} class="w-full px-2 py-1 mb-2 border border-gray-300 rounded">
+      <select bind:value={product.categoryId} class="w-full px-2 py-1 mb-2 border border-gray-300 rounded">
         {#each categories as category}
           <option value={category.id}>
             {category.title}
@@ -73,23 +132,24 @@ async function deleteProduct(productId) {
         {/each}
       </select>
     <div>
-      <button on:click={() => { editProduct() }} class="text-white border w-24 py-2 my-2 bg-primary rounded-md">Save</button>
+      <button on:click={editProduct} class="text-white border w-24 py-2 my-2 bg-primary rounded-md">Save</button>
       <button on:click={() => { isEditing = false }} class="border w-24 py-2 mx-4 rounded-md">Cancel</button>
     </div>
     </div>
   </div>
 {:else}
 <div class="max-w-md mx-auto">
-  <img src={editedProduct.thumbnailUrl} alt={editedProduct.title} />
+  <img src={product.thumbnailUrl} alt={product.title} />
 
   <div class="py-6">
-    <h3 class="text-xl font-semibold mb-2">{editedProduct.title}</h3>
-    <p class="text-gray-600 text-primary">{editedProduct.price}</p>
+    <h3 class="text-xl font-semibold mb-2">{product.title}</h3>
+    <p class="text-gray-600 text-primary">{product.price}</p>
 
     <div class="py-2">
-      <a class="hover:text-primary" href={editedProduct.url} > View </a>
+      <a class="hover:text-primary" href={product.url} > View </a>
       <button class="hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
-      <button class="hover:text-primary p-2" on:click={()=> {deleteProduct(data.id)}} > Delete </button>
+      <button class="hover:text-primary p-2" on:click={deleteProduct(data.id)} > Delete </button>
+      <button on:click={()=>addToCart(product)}>Add to cart</button>
     </div>
   
   </div>

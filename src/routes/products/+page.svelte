@@ -1,7 +1,8 @@
 <script>
-  import ProductList from '../../component/ProductList.svelte';
+  import ProductCard from '../../component/ProductCard.svelte';
   import Filter from '../../component/Filter.svelte';
   import Footer from '../../component/Footer.svelte';
+  import SearchBar from '../../component/SearchBar.svelte';
   import { onMount } from 'svelte';
 
   let products = [];
@@ -30,7 +31,8 @@
 
 <div class="my-8">
   <Filter {categories} {fetchProduct} />
-  <ProductList {products} />
+  <!-- <SearchBar /> -->
+  <ProductCard {products} />
 </div>
 
 <Footer />
