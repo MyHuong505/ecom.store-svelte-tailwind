@@ -77,6 +77,8 @@ const addToCart = (product) => {
       existingItem.quantity += 1;
     }
     calculateCartTotal();
+    cart = cart;
+    return;
   };
 
   const minusItem = (product) => {
@@ -89,11 +91,13 @@ const addToCart = (product) => {
       }
     }
     calculateCartTotal();
+    cart = cart;
+    return;
   };
 
 const calculateCartTotal = () => {
   totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-  totalPrice = cart.reduce((total, item) => total + parseFloat(item.price.replace(/\$/g, ''))* item.quantity, 0);
+  totalPrice = cart.reduce((total, item) => total + parseFloat(item.price.replace('$', ''))* item.quantity, 0);
   localStorage.setItem('cart', JSON.stringify(cart));
   localStorage.setItem('totalItems', totalItems.toString());
   localStorage.setItem('totalPrice', totalPrice.toString());
@@ -108,7 +112,12 @@ onMount(() => {
 
     const storedTotalPrice = localStorage.getItem('totalPrice');
     totalPrice = storedTotalPrice ? parseFloat(storedTotalPrice) : 0;
-  });
+});
+
+  function deleteItem(item) {
+    cart = cart.filter(cartItem => cartItem !== item);
+    calculateCartTotal();
+  }
 
 </script>
 
@@ -119,15 +128,15 @@ onMount(() => {
       <div>
         <img class="w-12" src={item.thumbnailUrl} alt={item.title}/>
         <h3 class="mt-2 text-stone-700 ">{item.title}</h3>
-        <p class="text-md text-primary">{item.price}</p>
+        <p class="text-md text-primary">{item.price}</p> 
         <button on:click={()=>plusItem(item)}>+</button>
         {item.quantity}
         <button on:click={()=>minusItem(item)}>-</button>
-      </div>
-      <div>
-          <p>Total Price: {totalPrice}</p>
+        <button on:click={()=>deleteItem(item)}>Delete</button>
+        <p>${item.price.replace('$', '') * item.quantity}</p>
       </div>
   {/each}
+  <p>Total Price: ${totalPrice}</p>
 </div>
 
 
@@ -144,7 +153,7 @@ onMount(() => {
       <select bind:value={product.categoryId} class="w-full px-2 py-1 mb-2 border border-gray-300 rounded">
         {#each categories as category}
           <option value={category.id}>
-            {category.title}
+              {category.title}
           </option>
         {/each}
       </select>
