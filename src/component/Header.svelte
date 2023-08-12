@@ -13,7 +13,8 @@
     
     <nav>
       <ul class="flex gap-4 mx-16">
-        <i class="fa-solid fa-cart-shopping"></i>
+        <i class="fa-solid fa-cart-shopping"> 
+        </i>
 		    <li>Login</li>
         <li>Contact us</li>
         <li>Help</li>

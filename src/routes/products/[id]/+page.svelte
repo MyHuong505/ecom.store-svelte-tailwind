@@ -1,8 +1,8 @@
 <script>
-  import { onMount } from 'svelte';
-    
   export let data;
-  
+  import { onMount } from 'svelte';
+  import ShoppingCart from '../../../component/ShoppingCart.svelte';
+  import {addToCart} from '../../../store/cartStore.js'
 
   let categories =[];
   let product = {
@@ -13,7 +13,6 @@
     categoryId: ""
 };
   let isEditing = false;
-
 
 
 onMount(()=>{
@@ -57,89 +56,11 @@ async function deleteProduct(productId) {
   await fetchData();
 }
 
-let cart = [];  
-let totalItems = 0;
-let totalPrice = 0;
-	
-const addToCart = (product) => {
-  const existingItem = cart.find((item) => item.id === product.id);
-  if (existingItem) {
-    existingItem.quantity += 1;
-  } else {
-		cart = [...cart, { ...product, quantity: 1 }];
-	}
-  calculateCartTotal();
-};  
-
-  const plusItem = (product) => {
-    const existingItem = cart.find((item) => item.id === product.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    }
-    calculateCartTotal();
-    cart = cart;
-    return;
-  };
-
-  const minusItem = (product) => {
-    const existingItem = cart.find((item) => item.id === product.id);
-    if (existingItem) {
-      if (existingItem.quantity > 1) {
-        existingItem.quantity -= 1;
-      } else {
-        cart = cart.filter((cartItem) => cartItem.id !== existingItem.id);
-      }
-    }
-    calculateCartTotal();
-    cart = cart;
-    return;
-  };
-
-const calculateCartTotal = () => {
-  totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-  totalPrice = cart.reduce((total, item) => total + parseFloat(item.price.replace('$', ''))* item.quantity, 0);
-  localStorage.setItem('cart', JSON.stringify(cart));
-  localStorage.setItem('totalItems', totalItems.toString());
-  localStorage.setItem('totalPrice', totalPrice.toString());
-};
-
-onMount(() => {
-    const storedCart = localStorage.getItem('cart');
-    cart = storedCart ? JSON.parse(storedCart) : [];
-
-    const storedTotalItems = localStorage.getItem('totalItems');
-    totalItems = storedTotalItems ? parseInt(storedTotalItems) : 0;
-
-    const storedTotalPrice = localStorage.getItem('totalPrice');
-    totalPrice = storedTotalPrice ? parseFloat(storedTotalPrice) : 0;
-});
-
-  function deleteItem(item) {
-    cart = cart.filter(cartItem => cartItem !== item);
-    calculateCartTotal();
-  }
 
 </script>
 
 
-<div class="cart-list">
-  <p>There are {totalItems} items in your cart</p>
-  {#each cart as item}
-      <div>
-        <img class="w-12" src={item.thumbnailUrl} alt={item.title}/>
-        <h3 class="mt-2 text-stone-700 ">{item.title}</h3>
-        <p class="text-md text-primary">{item.price}</p> 
-        <button on:click={()=>plusItem(item)}>+</button>
-        {item.quantity}
-        <button on:click={()=>minusItem(item)}>-</button>
-        <button on:click={()=>deleteItem(item)}>Delete</button>
-        <p>${item.price.replace('$', '') * item.quantity}</p>
-      </div>
-  {/each}
-  <p>Total Price: ${totalPrice}</p>
-</div>
-
-
+<ShoppingCart />
 
 {#if isEditing}
   <p class="flex justify-center m-8 font-semibold text-xl">Update product</p>
@@ -174,8 +95,8 @@ onMount(() => {
     <div class="py-2">
       <a class="hover:text-primary" href={product.url} > View </a>
       <button class="hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
-      <button class="hover:text-primary p-2" on:click={deleteProduct(data.id)} > Delete </button>
-      <button on:click={()=>addToCart(product)}>Add to cart</button>
+      <button class="hover:text-primary p-2" on:click={() => deleteProduct(data.id)}> Delete </button>
+      <button on:click={()=>console.log("Button clicked"), addToCart(product)}>Add to cart</button>
     </div>
   
   </div>
