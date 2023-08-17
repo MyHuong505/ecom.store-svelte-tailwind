@@ -58,8 +58,6 @@ async function deleteProduct(productId) {
 
 
 </script>
-
-
 <ShoppingCart />
 
 {#if isEditing}

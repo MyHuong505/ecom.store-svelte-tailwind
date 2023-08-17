@@ -3,7 +3,6 @@ import { onMount } from 'svelte';
 import HomeProduct from '../component/HomeProduct.svelte';
 import Banner from '../component/Banner.svelte';
 import Footer from '../component/Footer.svelte';
-import Carousel from '../component/Carousel.svelte';
 
 let products = [];
 
@@ -20,7 +19,7 @@ let products = [];
 </script>
 
 
-<div class="bg-gray-100">
+<div class="bg-gray-100 relative">
     <div class="bg-white mx-48 ">
         
         <Banner />

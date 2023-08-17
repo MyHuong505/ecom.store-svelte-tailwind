@@ -1,5 +1,8 @@
+import { onMount } from "svelte";
 import { writable } from "svelte/store";
 export const cart = writable([]);
+export let totalItems = 0;
+export let totalPrice = 0;
 
 export const plusItem = (item) => {
   cart.update((items) => {
@@ -19,10 +22,8 @@ export const minusItem = (item) => {
     if (existingItem) {
       if (existingItem.quantity > 1) {
         existingItem.quantity -= 1;
-      } else {
-        return items.filter((cartItem) => cartItem.id !== existingItem.id);
+        calculateCartTotal();
       }
-      calculateCartTotal();
     }
     return items;
   });
@@ -60,3 +61,20 @@ export const calculateCartTotal = () => {
     return items;
   });
 };
+
+// const unsubscribe = cart.subscribe((items) => {
+//   totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+//   totalPrice = items.reduce(
+//     (sum, item) =>
+//       sum + parseFloat(item.price.replace("$", "")) * item.quantity,
+//     0
+//   );
+// });
+
+// // Đừng quên hủy đăng ký khi không cần thiết nữa, ví dụ khi component bị hủy
+// unsubscribe();
+
+// onMount(() => {
+//   const storedCart = localStorage.getItem("cart");
+//   cart.set(storedCart ? JSON.parse(storedCart) : []);
+// });
