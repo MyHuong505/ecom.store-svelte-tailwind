@@ -1,10 +1,10 @@
   <script>
-    
     import ShoppingCart from "./ShoppingCart.svelte";
+    import {cart} from '../store/cartStore';
     let selectedPage = 'Home';
     let isCartVisible = false;
     let isMouseOverCart = false;
-    
+    let totalItemsFromCart = 0;
 
   function showCart() {
     isCartVisible = true;
@@ -33,6 +33,10 @@
   function handleCartClick() {
     window.location.href = "/cart"; 
   }
+
+  $: {
+    totalItemsFromCart = $cart.reduce((sum, item) => sum + item.quantity, 0);
+  }
   </script>
 
   <style>
@@ -46,6 +50,7 @@
   <header class="flex flex justify-between items-center py-6 px-8 text-white bg-primary">
     <nav class="">
       <ul class="flex gap-4 mx-16">
+        <div></div>
         <li><a href="/" class={selectedPage === 'Home' ? 'underline' : ''} on:click={()=>{selectedPage = 'Home'}}>Home</a></li>
         <li><a href="/products" class={selectedPage === 'Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'Product'}}>Product</a></li>
 		    <li><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
@@ -54,11 +59,15 @@
     
     <nav>
       <ul class="flex gap-4 mx-16">
-        <button class="fa-solid fa-cart-shopping cursor-pointer" 
-      on:mouseenter={handleCartMouseEnter}
-      on:mouseleave={handleCartMouseLeave}
-        >
-      </button>
+          <div class="relative">
+            <button class="fa-solid fa-cart-shopping cursor-pointer" 
+              on:mouseenter={handleCartMouseEnter}
+              on:mouseleave={handleCartMouseLeave}>
+            </button>
+            <span class="absolute top-0 right-0 -mt-2 -mr-3 bg-red-500 rounded-full w-5 h-5 text-white text-xs flex items-center justify-center">
+              {totalItemsFromCart}
+            </span>
+          </div>    
 		    <li>Login</li>
         <li>Contact us</li>
         <li>Help</li>

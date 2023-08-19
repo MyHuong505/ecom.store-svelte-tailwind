@@ -1,8 +1,5 @@
-import { onMount } from "svelte";
 import { writable } from "svelte/store";
 export const cart = writable([]);
-export let totalItems = 0;
-export let totalPrice = 0;
 
 export const plusItem = (item) => {
   cart.update((items) => {

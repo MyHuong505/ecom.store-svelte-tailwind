@@ -2,7 +2,7 @@
 import { cart, plusItem, minusItem, deleteItem} from '../store/cartStore';
 import { onMount } from 'svelte'; 
 
-let totalItems = 0;
+export let totalItems = 0;
 let totalPrice = 0;
 let slicedCart = [];
 
