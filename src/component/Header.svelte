@@ -4,7 +4,6 @@
     let selectedPage = 'Home';
     let isCartVisible = false;
     let isMouseOverCart = false;
-    let totalItemsFromCart = 0;
 
   function showCart() {
     isCartVisible = true;
@@ -34,9 +33,14 @@
     window.location.href = "/cart"; 
   }
 
+
+
+  let totalItemsFromCart = 0;
+
   $: {
     totalItemsFromCart = $cart.reduce((sum, item) => sum + item.quantity, 0);
   }
+
   </script>
 
   <style>
@@ -46,7 +50,6 @@
    height: 0.75rem;
   }
 </style>
-
   <header class="flex flex justify-between items-center py-6 px-8 text-white bg-primary">
     <nav class="">
       <ul class="flex gap-4 mx-16">

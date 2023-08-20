@@ -1,7 +1,6 @@
 <script>
   export let data;
   import { onMount } from 'svelte';
-  import ShoppingCart from '../../../component/ShoppingCart.svelte';
   import {addToCart} from '../../../store/cartStore.js'
 
   let categories =[];
@@ -58,7 +57,6 @@ async function deleteProduct(productId) {
 
 
 </script>
-<ShoppingCart />
 
 {#if isEditing}
   <p class="flex justify-center m-8 font-semibold text-xl">Update product</p>

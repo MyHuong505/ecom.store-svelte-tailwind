@@ -1,1 +1,0 @@
-<h1>Cart details</h1>

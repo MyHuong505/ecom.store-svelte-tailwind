@@ -1,21 +1,13 @@
 <script>
-import { cart, plusItem, minusItem, deleteItem} from '../store/cartStore';
-import { onMount } from 'svelte'; 
+import { slicedCart, totalItems, totalPrice, calculateCartData} from '../store/cartStore';
+import {onMount} from 'svelte';
 
-export let totalItems = 0;
-let totalPrice = 0;
-let slicedCart = [];
+  onMount(() => {
+    const storedCart = localStorage.getItem('cart');
+    cart.set(storedCart ? JSON.parse(storedCart) : []);
+    calculateCartData();
+  });
 
-$: {
-  slicedCart = $cart.slice(0, 4);
-  totalItems = $cart.reduce((sum, item) => sum + item.quantity, 0);
-  totalPrice = $cart.reduce((sum, item) => sum + parseFloat(item.price.replace('$', '')) * item.quantity, 0);
-}
-
-onMount(() => {
-  const storedCart = localStorage.getItem('cart');
-  cart.set(storedCart ? JSON.parse(storedCart) : []);
-});
 
 </script>
 
