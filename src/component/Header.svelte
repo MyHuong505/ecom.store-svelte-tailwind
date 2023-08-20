@@ -1,9 +1,11 @@
   <script>
     import ShoppingCart from "./ShoppingCart.svelte";
     import {cart} from '../store/cartStore';
+    import { onMount } from 'svelte';
     let selectedPage = 'Home';
     let isCartVisible = false;
     let isMouseOverCart = false;
+    let remainingItems = 0;
 
   function showCart() {
     isCartVisible = true;
@@ -30,10 +32,13 @@
   }
 
   function handleCartClick() {
-    window.location.href = "/cart"; 
+    window.location.href = "/cartDetails"; 
   }
 
-
+  onMount(() => {
+    const storedCart = localStorage.getItem('cart');
+    cart.set(storedCart ? JSON.parse(storedCart) : []);
+  });
 
   let totalItemsFromCart = 0;
 
@@ -63,7 +68,8 @@
     <nav>
       <ul class="flex gap-4 mx-16">
           <div class="relative">
-            <button class="fa-solid fa-cart-shopping cursor-pointer" 
+            <button class="fa-solid fa-cart-shopping cursor-pointer"
+              on:click={handleCartClick} 
               on:mouseenter={handleCartMouseEnter}
               on:mouseleave={handleCartMouseLeave}>
             </button>
@@ -86,10 +92,10 @@
       on:mouseenter={handleCartMouseEnter}
       on:mouseleave={handleCartMouseLeave} 
   >
-    <ShoppingCart /> 
+    <ShoppingCart {remainingItems}/> 
     <div class="flex p-4 bg-stone-100">
-      <button class="text-stone-800 text-sm px-4 py-2 mr-2 hover:underline hover:text-primary" on:click={handleCartClick}>View My Cart</button>
-      <button class="bg-primary text-white px-12 py-2 rounded text-sm">Proceed to Checkout</button>
+      <button class="text-stone-800 text-sm px-4 py-2 mr-2 hover:underline hover:text-primary" >{remainingItems} More Items In Cart</button>
+      <button class="bg-primary text-white px-12 py-2 rounded text-sm hover:bg-secondary" on:click={handleCartClick}>View My Cart</button>
     </div>
   </button>
 </div>
