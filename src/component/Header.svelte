@@ -7,6 +7,7 @@
     let isMouseOverCart = false;
     let remainingItems = 0;
 
+
   function showCart() {
     isCartVisible = true;
   }
@@ -32,7 +33,7 @@
   }
 
   function handleCartClick() {
-    window.location.href = "/cartDetails"; 
+    window.location.href = "/cart"; 
   }
 
   onMount(() => {
@@ -44,6 +45,8 @@
 
   $: {
     totalItemsFromCart = $cart.reduce((sum, item) => sum + item.quantity, 0);
+    const remainingQuantities = $cart.slice(4).map(item => item.quantity);
+    remainingItems = remainingQuantities.reduce((sum, quantity) => sum + quantity, 0);
   }
 
   </script>
@@ -84,19 +87,23 @@
     </nav>
   </header>
 
-  {#if isCartVisible}
+{#if isCartVisible}
 <div class="relative">
   <div class="triangle absolute bottom-0 right-72 bg-white shadow-md">
   </div>
-  <button class="fixed right-64 w-96 z-50 rounded grid bg-white drop-shadow-lg"
+  <div class="fixed right-64 w-96 z-50 rounded grid bg-white drop-shadow-lg"
       on:mouseenter={handleCartMouseEnter}
       on:mouseleave={handleCartMouseLeave} 
   >
-    <ShoppingCart {remainingItems}/> 
-    <div class="flex p-4 bg-stone-100">
-      <button class="text-stone-800 text-sm px-4 py-2 mr-2 hover:underline hover:text-primary" >{remainingItems} More Items In Cart</button>
-      <button class="bg-primary text-white px-12 py-2 rounded text-sm hover:bg-secondary" on:click={handleCartClick}>View My Cart</button>
+    <ShoppingCart /> 
+    <div class="flex items-center p-4 bg-stone-100">
+      <span class="text-stone-800 text-sm py-2 mr-2 text-xs">
+          {remainingItems === 1 ? `${remainingItems} More Item In Cart` : `${remainingItems} More Items In Cart`} 
+      </span>
+      <button class="bg-primary text-white px-12 py-2 rounded text-sm hover:bg-secondary ml-auto" on:click={handleCartClick}>
+          View My Cart
+      </button>
     </div>
-  </button>
+  </div>
 </div>
-  {/if}
+{/if}

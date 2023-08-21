@@ -14,7 +14,7 @@ function gotoPage(product) {
       <h3 class="mt-2 text-stone-700 ">{product.title}</h3>
 
       <div class="mt-auto">
-        <p class="font-semibold text-lg text-primary">{product.price}</p>
+        <p class="font-medium text-lg text-primary">${product.price}</p>
       </div>
     </div>
   {/each}

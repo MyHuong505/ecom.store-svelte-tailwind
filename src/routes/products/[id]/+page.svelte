@@ -55,6 +55,15 @@ async function deleteProduct(productId) {
   await fetchData();
 }
 
+let showPopup = false;
+
+async function addToCartAndShowPopup(product) {
+  addToCart(product); 
+    showPopup = true;  
+    setTimeout(() => {
+      showPopup = false; 
+    }, 2000); 
+}
 
 </script>
 
@@ -92,10 +101,19 @@ async function deleteProduct(productId) {
       <a class="hover:text-primary" href={product.url} > View </a>
       <button class="hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
       <button class="hover:text-primary p-2" on:click={() => deleteProduct(data.id)}> Delete </button>
-      <button on:click={()=>console.log("Button clicked"), addToCart(product)}>Add to cart</button>
+      <button on:click={()=>console.log("Button clicked"), addToCartAndShowPopup(product)}>Add to cart</button>
     </div>
   
   </div>
 </div>
 
+{/if}
+
+{#if showPopup}
+<div class="fixed inset-0 flex items-center justify-center">
+  <div class="bg-black bg-opacity-50 p-6 rounded shadow-md p-12 flex flex-col items-center">
+    <i class="fa-solid fa-circle-check text-green-500 text-5xl mb-4 "></i>
+    <p class="text-md font-semibold mb-2 text-white">Item has been added to your cart</p>
+  </div>
+</div>
 {/if}
