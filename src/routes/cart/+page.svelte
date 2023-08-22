@@ -30,11 +30,23 @@ let selectAll = false;
         updateTotals();
     }
 
+    
+let isCheckoutPopupVisible = false;
+
+    function handleCheckout() {
+        const selectedProducts = $cart.filter(item => item.selected);
+        if (selectedProducts.length === 0) {
+            isCheckoutPopupVisible = true;
+        } else {
+            window.location.href = "/checkout"; 
+        }
+    }
+
 </script>
 <div class="bg-gray-100 w-full h-full flex justify-center">
     <div class="w-3/6 bg-white overflow-auto my-4 rounded">
         <div class="text-stone-700 mx-4 my-2 pb-2 pt-4 text-md font-extrabold">Shopping Cart</div>
-        <div class="flex my-2 mx-4  ">
+        <div class="flex my-2 mx-4">
             <input type="checkbox" class="h-4 w-4 " checked={selectAll} disabled={false} on:change={toggleSelectAll}  />
             <span class="text-stone-700 text-sm mx-4">Select All</span>
             <span class="text-stone-700 text-sm mx-8">Items</span>
@@ -88,8 +100,16 @@ let selectAll = false;
             Cart Total: <span class="text-stone-700 float-right text-lg">USD ${totalPrice.toFixed(2)}</span>
         </p>
         <div class="mx-4 my-4">
-            <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto">Check Out</button>
+            <button on:click={handleCheckout} class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto">Check Out</button>
         </div>
     </div>
 </div>
 
+{#if isCheckoutPopupVisible}
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded shadow-md">
+            <p class="p-8">You have not selected any items for checkout</p>
+            <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto" on:click={() => isCheckoutPopupVisible = false}>OK</button>
+        </div>
+    </div>
+{/if}
