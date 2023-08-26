@@ -1,9 +1,16 @@
 <script>
     const countries = [
-        { code: 'fra', name: 'France', flag: 'https://www.nicepng.com/png/full/190-1909755_france-flag-3d-round-xl-france-flag-icon.png'},
-        { code: 'vie', name: 'Vietnam', flag: 'https://www.nicepng.com/png/full/190-1909755_france-flag-3d-round-xl-france-flag-icon.png'},
-        { code: 'usa', name: 'United States', flag: 'https://cdn3.iconfinder.com/data/icons/flags-of-countries-3/128/USA-1024.png' },
+        { code: 'fra', countrycode: '+590',name: 'France', flag: 'https://www.nicepng.com/png/full/190-1909755_france-flag-3d-round-xl-france-flag-icon.png'},
+        { code: 'vie', countrycode: '+84' ,name: 'Vietnam', flag: 'https://www.nicepng.com/png/full/190-1909755_france-flag-3d-round-xl-france-flag-icon.png'},
+        { code: 'usa', countrycode: '+00',name: 'United States', flag: 'https://cdn3.iconfinder.com/data/icons/flags-of-countries-3/128/USA-1024.png' },
     ];
+
+let selectedCountry = countries[0];
+
+function handleCountryChange(event) {
+  const countryCode = event.target.value;
+  selectedCountry = countries.find(country => country.code === countryCode);
+}
 
 let firstName = "";
 let lastName = "";
@@ -26,37 +33,37 @@ function handleSubmit() {
         <div class="text-stone-700 mx-4 my-2 pb-2 pt-4 text-md font-extrabold">Shipping Address</div>
     <div class="flex flex-row my-4 mb-8">
         <div class="flex flex-col w-1/2">
-            <span class="text-stone-500 text-sm mx-4 mb-1">*First Name</span>
-            <input type="text" class="mx-4 rounded py-1 pl-1 border {isSubmitted && !firstName ? 'border-red-500' : ''}" bind:value={firstName} />
+            <span class="text-stone-500 text-xs mx-4 mb-1">*First Name</span>
+            <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {isSubmitted && !firstName ? 'border-red-500' : ''}" bind:value={firstName} />
             {#if isSubmitted && !firstName}
-                <p class="text-red-500 text-xs mx-4 fixed mt-14">Please enter your first name.</p>
+                <p class="text-red-500 text-xs mx-4 fixed mt-16">Please enter your first name.</p>
             {/if}
         </div>
         <div class="flex flex-col w-1/2">
-            <span class="text-stone-500 text-sm mx-4 mb-1" >*Last Name</span>
-            <input type="text" class="mx-4 border rounded py-1 pl-1 {isSubmitted && !lastName ? 'border-red-500' : ''}" bind:value={lastName} />
+            <span class="text-stone-500 text-xs mx-4 mb-1" >*Last Name</span>
+            <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !lastName ? 'border-red-500' : ''}" bind:value={lastName} />
             {#if isSubmitted && !lastName}
-                <p class="text-red-500 text-xs mx-4 fixed mt-14">Please enter your last name.</p>
+                <p class="text-red-500 text-xs mx-4 fixed mt-16">Please enter your last name.</p>
             {/if}
         </div>
     </div>
     <div class="flex flex-row my-4 mb-8">
         <div class="flex flex-col w-1/2">
-            <span class="text-stone-500 text-sm mx-4 mb-1">*Address line 1</span>
-            <input type="text" class="mx-4 border rounded py-1 pl-1 {isSubmitted && !address ? 'border-red-500' : ''}" bind:value={address}/>
+            <span class="text-stone-500 text-xs mx-4 mb-1">*Address line 1</span>
+            <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !address ? 'border-red-500' : ''}" bind:value={address}/>
             {#if isSubmitted && !address}
-                <p class="text-red-500 text-xs mx-4 fixed mt-14">Please enter your address.</p>
+                <p class="text-red-500 text-xs mx-4 fixed mt-16">Please enter your address.</p>
             {/if}
         </div>
         <div class="flex flex-col w-1/2">
-            <span class="text-stone-500 text-sm mx-4 mb-1">Address line 2 (optional)</span>
-            <input type="text" class="mx-4 border rounded py-1 pl-1" />
+            <span class="text-stone-500 text-xs mx-4 mb-1">Address line 2 (optional)</span>
+            <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500"  />
         </div>
     </div>
     <div class="flex flex-row my-4 mb-8">
         <div class="flex flex-col w-1/3">
-            <span class="text-stone-500 text-sm mx-4 mb-1">*Country/Region</span>
-                <select class="mx-4 border rounded py-1 pl-1">
+            <span class="text-stone-500 text-xs mx-4 mb-1">*Country/Region</span>
+                <select class="mx-4 border rounded py-2.5 pl-1 outline-none focus-within:border-blue-500" on:change={handleCountryChange}>
         {#each countries as country }
             <option value={country.code}>
                 <img src={country.flag} alt={country.name} class="w-4 h-3 mr-2" />
@@ -66,33 +73,37 @@ function handleSubmit() {
     </select>
         </div>
         <div class="flex flex-col w-1/3">
-            <span class="text-stone-500 text-sm mx-4 mb-1">State/County</span>
-            <input type="text" class="mx-4 border rounded py-1 pl-1" />
+            <span class="text-stone-500 text-xs mx-4 mb-1">State/County</span>
+            <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500" />
         </div>
         <div class="flex flex-col w-1/3">
-            <span class="text-stone-500 text-sm mx-4 mb-1">*City</span>
-            <input type="text" class="mx-4 border rounded py-1 pl-1 {isSubmitted && !city ? 'border-red-500' : ''}" bind:value={city}/>
+            <span class="text-stone-500 text-xs mx-4 mb-1">*City</span>
+            <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !city ? 'border-red-500' : ''}" bind:value={city}/>
             {#if isSubmitted && !city}
-                <p class="text-red-500 text-xs mx-4 fixed mt-14">Please enter your city.</p>
+                <p class="text-red-500 text-xs mx-4 fixed mt-16">Please enter your city.</p>
             {/if}
         </div>
     </div>
     <div class="flex flex-row my-4 mb-8">
         <div class="flex flex-col w-1/2">
-            <span class="text-stone-500 text-sm mx-4 mb-1">*Zip/Postal Code</span>
-            <input type="text" class="mx-4 border rounded py-1 pl-1 {isSubmitted && !zip ? 'border-red-500' : ''}" bind:value={zip}/>
+            <span class="text-stone-500 text-xs mx-4 mb-1">*Zip/Postal Code</span>
+            <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !zip ? 'border-red-500' : ''}" bind:value={zip}/>
             {#if isSubmitted && !zip}
-                <p class="text-red-500 text-xs mx-4 fixed mt-14">Please enter your zip/postal code.</p>
+                <p class="text-red-500 text-xs mx-4 fixed mt-16">Please enter your zip/postal code.</p>
             {/if}
         </div>
-        <div class="flex flex-col w-1/2 relative">
-            <span class="text-stone-500 text-sm mx-4 mb-1">*Phone Number</span>
-            <input type="text" class="mx-4 border rounded py-1 pl-1 {isSubmitted && !phoneNum ? 'border-red-500' : ''}" bind:value={phoneNum}/>
+        <div class="flex flex-col w-1/2">
+            <span class="text-stone-500 text-xs mb-1 ml-4">*Phone Number</span>
+            <div class="flex items-center ml-4 mr-4">
+                <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {isSubmitted && !phoneNum ? 'border-red-500' : ''}">{selectedCountry.countrycode}</span>
+                <input type="text" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isSubmitted && !phoneNum ? 'border-red-500' : ''}" bind:value={phoneNum}/>
+            </div>
             {#if isSubmitted && !phoneNum}
-                <p class="text-red-500 text-xs mx-4 fixed mt-14">Please enter your phone number.</p>
+                <p class="text-red-500 text-xs mx-4 mt-2 fixed mt-16">Please enter your phone number.</p>
             {/if}
+            </div>
         </div>
-    </div>
+    
     <div class="flex items-center justify-center">
         <button class="w-1/5 bg-primary text-white py-2 rounded text-sm hover:bg-secondary mb-8" on:click={handleSubmit}>
             Save
