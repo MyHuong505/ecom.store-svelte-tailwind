@@ -1,9 +1,9 @@
 <script>
-import { onMount,  afterUpdate  } from 'svelte';
+import {afterUpdate  } from 'svelte';
 
     const countries = [
-        { code: 'fra', countrycode: '+590',name: 'France', flag: 'https://www.nicepng.com/png/full/190-1909755_france-flag-3d-round-xl-france-flag-icon.png'},
-        { code: 'vie', countrycode: '+84' ,name: 'Vietnam', flag: 'https://www.nicepng.com/png/full/190-1909755_france-flag-3d-round-xl-france-flag-icon.png'},
+        { code: 'fra', countrycode: '+590',name: 'France', flag: 'https://tse3.explicit.bing.net/th?id=OIP.DdIdlrDrhxD2oTJbvd0TdgHaHv&pid=Api&P=0&h=220'},
+        { code: 'vie', countrycode: '+84' ,name: 'Vietnam', flag: 'https://www.pngkit.com/png/detail/382-3826500_vietnam-flag-circle-icon-vietnam-flag-flags-of.png'},
         { code: 'usa', countrycode: '+00',name: 'United States', flag: 'https://cdn3.iconfinder.com/data/icons/flags-of-countries-3/128/USA-1024.png' },
     ];
 
@@ -26,21 +26,21 @@ function handleSubmit() {
 let selectedCountry = countries[0];
 
 
-function handleCountryChange(event) {
-  const countryCode = event.target.value;
-  selectedCountry = countries.find(country => country.code === countryCode);
-  search = selectedCountry.name;
-  showSelect = false;
+function handleCountryChange(countryCode) {
+    selectedCountry = countries.find(country => country.code === countryCode);
+    search = selectedCountry.name;
+    showSelect = false;
 }
-  let search = '';
-  let filteredCountries = countries;
+
+let search = '';
+let filteredCountries = countries;
     
 
-  function filterCountries() {
+function filterCountries() {
     filteredCountries = countries.filter(country => {
-      return country.name.toLowerCase().includes(search.toLowerCase());
+    return country.name.toLowerCase().includes(search.toLowerCase());
     });
-  }
+}
 
   
 function handleSearchKeydown(event) {
@@ -54,12 +54,12 @@ function handleSearchKeydown(event) {
 }
 
 
-  let showSelect = false;
+let showSelect = false;
 
 
   function handleSearchFocus() {
-    showSelect = true;
-
+    showSelect = !showSelect;
+    showClearButton = true;
   }
 
   function handleSearchBlur() {
@@ -71,7 +71,13 @@ function handleSearchKeydown(event) {
     });
   }
 
-  
+let showClearButton = false;
+
+  function handleClearSearch() {
+  search = '';
+  filteredCountries = countries;
+
+}  
 
 </script>
 
@@ -111,32 +117,52 @@ function handleSearchKeydown(event) {
     <div class="flex flex-row my-4 mb-8">
         <div class="flex flex-col w-1/3">
         <span class="text-stone-500 text-xs mx-4 mb-1">*Country/Region</span>
-        <div class=" flex flex-col relative mx-4">
+        <div class="relative mx-4">
+    <button
+        class="flex items-center w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500 bg-white"
+        on:click={handleSearchFocus}>
+        {#if selectedCountry}
+        <img src={selectedCountry.flag} alt={selectedCountry.name} class="w-4 h-3 mr-2" />
+            {selectedCountry.name}
+        {:else}
+            Select a country
+        {/if}
+        <span class="ml-auto">
+        {#if showSelect}
+            <i class="fas fa-chevron-up ml-2"></i>
+        {:else}
+            <i class="fas fa-chevron-down ml-2"></i>
+        {/if}
+        </span>
+    </button>
+    {#if showSelect}
+        <div class="absolute z-10 w-full bg-white border rounded shadow-lg">
             <input
-            type="text"
-            class="w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500"
-            placeholder="Search country"
-            bind:value={search}
-            on:input={filterCountries}
-            on:keydown={handleSearchKeydown}
-            on:focus={handleSearchFocus}
-            on:blur={handleSearchBlur}
+                type="text"
+                class="w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500"
+                placeholder="Search country"
+                bind:value={search}
+                on:input={filterCountries}
+                on:keydown={handleSearchKeydown}
+                on:blur={handleSearchBlur}
             />
-            {#if showSelect}
-            <select
-                class="absolute mt-10 w-full px-4 py-1 border rounded outline-none focus-within:border-blue-500"
-                on:change={handleCountryChange}
-                on:focus={handleSearchFocus}
+            {#if showClearButton}
+            <button class="absolute right-4 top-2 text-gray-500" on:click={handleClearSearch}>
+                <i class="fas fa-times"></i>
+            </button>
+            {/if}
+            {#each filteredCountries as country}
+                <div
+                    class="flex items-center center-justify px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    on:click={() => handleCountryChange(country.code)}
                 >
-                {#each filteredCountries as country }
-                <option value={country.code}>
                     <img src={country.flag} alt={country.name} class="w-4 h-3 mr-2" />
                     {country.name}
-                </option>
-                {/each}
-            </select>
-            {/if}
-        </div>
+                </div>
+            {/each}
+            </div>
+    {/if}
+    </div>
         </div>
         <div class="flex flex-col w-1/3">
             <span class="text-stone-500 text-xs mx-4 mb-1">State/County</span>
@@ -165,7 +191,7 @@ function handleSearchKeydown(event) {
                 <input type="text" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isSubmitted && !phoneNum ? 'border-red-500' : ''}" bind:value={phoneNum}/>
             </div>
             {#if isSubmitted && !phoneNum}
-                <p class="text-red-500 text-xs mx-4 mt-2 fixed mt-16">Please enter your phone number.</p>
+                <p class="text-red-500 text-xs mx-4 fixed mt-16">Please enter your phone number.</p>
             {/if}
             </div>
         </div>
