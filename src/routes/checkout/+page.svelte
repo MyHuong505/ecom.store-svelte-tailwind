@@ -22,16 +22,6 @@ function handleSubmit() {
         isSubmitted = true;
     }
 
-
-let selectedCountry = countries[0];
-
-
-function handleCountryChange(countryCode) {
-    selectedCountry = countries.find(country => country.code === countryCode);
-    search = selectedCountry.name;
-    showSelect = false;
-}
-
 let search = '';
 let filteredCountries = countries;
     
@@ -55,25 +45,32 @@ function handleSearchKeydown(event) {
 
 
 let showSelect = false;
+let selectedCountry = countries[0];
 
 
-  function handleSearchFocus() {
+function handleCountryChange(countryCode) {
+    selectedCountry = countries.find(country => country.code === countryCode);
+    search = selectedCountry.name;
+    showSelect = false;
+}
+
+function handleSearchFocus() {
     showSelect = !showSelect;
     showClearButton = true;
-  }
+}
 
-  function handleSearchBlur() {
+function handleSearchBlur() {
     afterUpdate(() => {
       if (!showSelect && filteredCountries.length > 0) {
         selectedCountry = filteredCountries[0];
         search = selectedCountry.name;
-      }
-    });
-  }
+    }
+  });
+}
 
 let showClearButton = false;
 
-  function handleClearSearch() {
+function handleClearSearch() {
   search = '';
   filteredCountries = countries;
 
@@ -160,7 +157,7 @@ let showClearButton = false;
                     {country.name}
                 </div>
             {/each}
-            </div>
+        </div>
     {/if}
     </div>
         </div>
@@ -188,7 +185,7 @@ let showClearButton = false;
             <span class="text-stone-500 text-xs mb-1 ml-4">*Phone Number</span>
             <div class="flex items-center ml-4 mr-4">
                 <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {isSubmitted && !phoneNum ? 'border-red-500' : ''}">{selectedCountry.countrycode}</span>
-                <input type="text" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isSubmitted && !phoneNum ? 'border-red-500' : ''}" bind:value={phoneNum}/>
+                <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isSubmitted && !phoneNum ? 'border-red-500' : ''}" bind:value={phoneNum}/>
             </div>
             {#if isSubmitted && !phoneNum}
                 <p class="text-red-500 text-xs mx-4 fixed mt-16">Please enter your phone number.</p>
