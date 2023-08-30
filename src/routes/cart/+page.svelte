@@ -1,6 +1,7 @@
 <script>
     import {onMount} from 'svelte';
-    import {cart, plusItem, minusItem, deleteItem} from "../../store/cartStore.js"
+    import {cart, plusItem, minusItem, deleteItem} from "../../store/cartStore.js";
+    import {checkoutItems} from "../../store/selectedProductsStore.js";
 
 let totalItems = 0;
 let totalPrice = 0;
@@ -38,9 +39,13 @@ let isCheckoutPopupVisible = false;
         if (selectedProducts.length === 0) {
             isCheckoutPopupVisible = true;
         } else {
+            checkoutItems.set(selectedProducts);
+            console.log(checkoutItems);
             window.location.href = "/checkout"; 
         }
     }
+
+
 
 </script>
 <div class="bg-gray-100 w-full h-full flex justify-center">
