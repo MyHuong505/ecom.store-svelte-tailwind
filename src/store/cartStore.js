@@ -58,3 +58,5 @@ export const calculateCartTotal = () => {
     return items;
   });
 };
+
+export const checkoutItems = writable([]);
