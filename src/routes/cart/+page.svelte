@@ -41,9 +41,9 @@ let isCheckoutPopupVisible = false;
             isCheckoutPopupVisible = true;
         } else {
             checkoutItems.set([...selectedProducts]);
-            checkoutItems.subscribe(value => {
-  console.log(value);
-});
+            // checkoutItems.subscribe(value => {
+            //     console.log(value);
+            // });
             window.location.href = "/checkout"; 
         }
     }
