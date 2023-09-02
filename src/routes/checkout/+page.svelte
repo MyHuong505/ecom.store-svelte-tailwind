@@ -1,7 +1,7 @@
-<script>
-// import {onMount} from 'svelte';    
+<script>    
 import {afterUpdate  } from 'svelte';
 import {checkoutItems} from "../../store/cartStore.js";
+
 
     const countries = [
         { code: 'fra', countrycode: '+590',name: 'France', flag: 'https://tse3.explicit.bing.net/th?id=OIP.DdIdlrDrhxD2oTJbvd0TdgHaHv&pid=Api&P=0&h=220'},
@@ -77,6 +77,13 @@ function handleClearSearch() {
   filteredCountries = countries;
 
 }  
+
+let checkoutItemsData;
+
+checkoutItems.subscribe(value => {
+  checkoutItemsData = value;
+  console.log(checkoutItemsData);
+});
 
 </script>
 
@@ -201,14 +208,14 @@ function handleClearSearch() {
         </button>
     </div>
 
+{#each checkoutItemsData as item (item.id)}
+    <div>
+      <h3>{item.title}</h3>
+      <p>Price: {item.price}</p>
+      <!-- Hiển thị các thông tin khác của sản phẩm -->
+    </div>
+  {/each}
 
-        {#each $checkoutItems as item}
-            <div class="flex items-center justify-between mt-4">
-                <span>{item.title}</span>
-                <span>{item.price}</span>
-            </div>
-        {/each}
-    
         
     </div>
     <div class="w-1/5 h-1/5 py-2 bg-white m-4 sticky top-4 rounded">
@@ -217,7 +224,7 @@ function handleClearSearch() {
 
         <p class="py-2 px-4 text-stone-500 text-sm text-left"> Total:
         <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mt-8" >
-            Continue
+            Confirm
         </button>   
     </div>
     
