@@ -1,6 +1,6 @@
 <script>
     import {onMount} from 'svelte';
-    import {cart, plusItem, minusItem, deleteItem, checkoutItems} from "../../store/cartStore.js";
+    import {cart, plusItem, minusItem, deleteItem, updateCheckoutItems, checkoutItems} from "../../store/cartStore.js";
     
 
 let totalItems = 0;
@@ -10,7 +10,7 @@ function updateTotals() {
     totalItems = $cart.reduce((sum, item) => item.selected ? sum + item.quantity : sum, 0);
     totalPrice = $cart.reduce((sum, item) => item.selected ? sum + parseFloat(item.price.replace('$', '')) * item.quantity : sum, 0);
     const selectedProducts = $cart.filter(item => item.selected);
-    checkoutItems.set(selectedProducts);
+    
 }
 
 onMount(() => {
@@ -42,11 +42,9 @@ let isCheckoutPopupVisible = false;
         if (selectedProducts.length === 0) {
             isCheckoutPopupVisible = true;
         } else {
-            console.log("Selected Products:", selectedProducts); 
-            checkoutItems.set(selectedProducts);
+            updateCheckoutItems(selectedProducts);
             
-            console.log(checkoutItems);
-            // window.location.href = "/checkout"; 
+            window.location.href = "/checkout";
         }
     }
 

@@ -1,4 +1,5 @@
-<script>    
+<script>
+import {onMount} from 'svelte';    
 import {afterUpdate  } from 'svelte';
 import {checkoutItems} from "../../store/cartStore.js";
 
@@ -78,12 +79,18 @@ function handleClearSearch() {
 
 }  
 
-let checkoutItemsData;
+let checkoutItemsData = [];
 
-checkoutItems.subscribe(value => {
-  checkoutItemsData = value;
-  console.log(checkoutItemsData);
-});
+  onMount(() => {
+    const storedCheckoutItems = localStorage.getItem('checkoutItems');
+    if (storedCheckoutItems) {
+      checkoutItems.set(JSON.parse(storedCheckoutItems));
+    }
+    const unsubscribe = checkoutItems.subscribe((value) => {
+      checkoutItemsData = value;
+    });
+    unsubscribe();
+  });
 
 </script>
 
@@ -208,18 +215,20 @@ checkoutItems.subscribe(value => {
         </button>
     </div>
 
-{#each checkoutItemsData as item (item.id)}
-    <div>
-      <h3>{item.title}</h3>
-      <p>Price: {item.price}</p>
-      <!-- Hiển thị các thông tin khác của sản phẩm -->
-    </div>
-  {/each}
-
         
     </div>
     <div class="w-1/5 h-1/5 py-2 bg-white m-4 sticky top-4 rounded">
         <p class="text-stone-700 border-b mx-4 py-4 text-md font-extrabold">Order Summary</p>
+
+    <div class="m-4">
+        {#if checkoutItemsData.length > 0}
+        <ul>
+            {#each checkoutItemsData as item}
+            <li>{item.title} - {item.price}</li>
+            {/each}
+        </ul>
+        {/if}
+    </div>
 
 
         <p class="py-2 px-4 text-stone-500 text-sm text-left"> Total:

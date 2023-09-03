@@ -60,3 +60,8 @@ export const calculateCartTotal = () => {
 };
 
 export const checkoutItems = writable([]);
+
+export const updateCheckoutItems = (items) => {
+  checkoutItems.set(items);
+  localStorage.setItem("checkoutItems", JSON.stringify(items));
+};
