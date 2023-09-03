@@ -1,6 +1,6 @@
 <script>
     import {onMount} from 'svelte';
-    import {cart, plusItem, minusItem, deleteItem, updateCheckoutItems, checkoutItems} from "../../store/cartStore.js";
+    import {cart, plusItem, minusItem, deleteItem, updateCheckoutItems} from "../../store/cartStore.js";
     
 
 let totalItems = 0;
@@ -109,7 +109,9 @@ let isCheckoutPopupVisible = false;
             Cart Total: <span class="text-stone-700 float-right text-lg">USD ${totalPrice.toFixed(2)}</span>
         </p>
         <div class="mx-4 my-4">
-            <button on:click={handleCheckout} class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto">Check Out</button>
+            <button on:click={handleCheckout} class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto">
+                Check Out
+            </button>
         </div>
     </div>
 </div>
@@ -118,7 +120,9 @@ let isCheckoutPopupVisible = false;
     <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
         <div class="bg-white p-6 rounded shadow-md">
             <p class="p-8">You have not selected any items for checkout</p>
-            <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto" on:click={() => isCheckoutPopupVisible = false}>OK</button>
+            <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto" on:click={() => isCheckoutPopupVisible = false}>
+                OK
+            </button>
         </div>
     </div>
 {/if}
