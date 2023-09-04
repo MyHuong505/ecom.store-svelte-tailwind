@@ -108,7 +108,12 @@ onMount(() => {
 $: {
   calculateTotal();
 }
+let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được chọn
 
+  // Hàm xử lý khi chọn phương thức thanh toán
+  function handlePaymentMethodChange(event) {
+    selectedPaymentMethod = event.target.value;
+  }
 
 </script>
 
@@ -236,7 +241,53 @@ $: {
         </div>
 
         <div class="bg-white rounded mb-4">
+            <div>
+
+
+
+
             <p class="text-stone-700 mx-4 py-4 text-md font-extrabold">Products Ordered</p>
+            
+            <div class="flex mx-4 mb-8">
+            <label
+                class="w-1/3 h-24 border p-4 rounded flex items-center transition duration-300 ease-in-out hover:border-blue-500
+                {selectedPaymentMethod === 'first_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
+                ">
+                <input
+                type="radio"
+                value="first_option"
+                bind:group={selectedPaymentMethod}
+                on:change={handlePaymentMethodChange}
+                />
+                <div class="ml-2 text-stone-700">
+                3 - 7 Business days shipping time
+                <p class="text-sm text-stone-500 pt-1">
+                    US $17.13
+                </p>
+                </div>
+            </label>
+
+            <label
+                class="w-1/3 h-24 border p-4 rounded flex items-center mx-4 transition duration-300 ease-in-out hover:border-blue-500
+                {selectedPaymentMethod === 'second_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
+                ">
+                <input
+                type="radio"
+                value="second_option"
+                bind:group={selectedPaymentMethod}
+                on:change={handlePaymentMethodChange}
+                />
+                <div class="ml-2 text-stone-700">
+                10 - 15 Business days shipping time
+                <p class="text-sm text-stone-500 pt-1">
+                    US $10.96
+                </p>
+                </div>
+            </label>
+            </div>
+            
+
+</div>
             {#each checkoutItemsData as item}
                 <div class="flex my-4">
                 <img class="w-20 h-20 ml-4" src={item.thumbnailUrl} alt={item.title} />
