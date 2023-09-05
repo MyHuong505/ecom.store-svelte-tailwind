@@ -11,14 +11,19 @@ import {checkoutItems} from "../../store/cartStore.js";
     ];
 
 
-let firstName = "";
-let lastName = "";
-let address = "";
-let city = "";
-let zip = "";
-let phoneNum = "";
+let userData = {
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    zip: "",
+    countrycode: "",
+    phoneNum: "",
+    selectedCountry: countries[0],
+};
 
 
+let showSelect = false;
 let isSubmitted = false;
 
 function handleSubmit() {
@@ -39,22 +44,20 @@ function filterCountries() {
 function handleSearchKeydown(event) {
   if (event.key === 'Enter') {
     if (filteredCountries.length > 0) {
-      selectedCountry = filteredCountries[0];
-      search = selectedCountry.name;
-      showSelect = false; 
+      userData.selectedCountry = filteredCountries[0];
+      search = userData.selectedCountry.name;
+      showSelect = false;
     }
   }
 }
 
 
-let showSelect = false;
-let selectedCountry = countries[0];
-
 
 function handleCountryChange(countryCode) {
-    selectedCountry = countries.find(country => country.code === countryCode);
-    search = selectedCountry.name;
+    userData.selectedCountry = countries.find(country => country.code === countryCode);
+    search = userData.selectedCountry.name;
     showSelect = false;
+    userData.countrycode = userData.selectedCountry.countrycode;
 }
 
 function handleSearchFocus() {
@@ -65,8 +68,8 @@ function handleSearchFocus() {
 function handleSearchBlur() {
     afterUpdate(() => {
       if (!showSelect && filteredCountries.length > 0) {
-        selectedCountry = filteredCountries[0];
-        search = selectedCountry.name;
+        userData.selectedCountry = filteredCountries[0];
+        search = userData.selectedCountry.name;
     }
   });
 }
@@ -76,7 +79,6 @@ let showClearButton = false;
 function handleClearSearch() {
   search = '';
   filteredCountries = countries;
-
 }  
 
 let checkoutItemsData = [];
@@ -84,7 +86,7 @@ let checkoutItemsData = [];
 let totalProducts = 0;
 let totalPrice = 0;
 
-// Hàm tính tổng sản phẩm và tổng tiền
+
 function calculateTotal() {
   totalProducts = 0;
   totalPrice = 0;
@@ -95,7 +97,7 @@ function calculateTotal() {
   }
 }
 
-// Thiết lập sự kiện lắng nghe sự thay đổi của mảng checkoutItemsData
+
 onMount(() => {
   const storedCheckoutItems = localStorage.getItem('checkoutItems');
   if (storedCheckoutItems) {
@@ -104,16 +106,44 @@ onMount(() => {
   }
 });
 
-// Lắng nghe sự thay đổi của mảng checkoutItemsData và tính toán lại tổng
+
 $: {
   calculateTotal();
 }
-let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được chọn
 
-  // Hàm xử lý khi chọn phương thức thanh toán
-  function handlePaymentMethodChange(event) {
-    selectedPaymentMethod = event.target.value;
+
+let selectedShippingTime = '';
+let shippingPrice = 0;
+
+  function handleShippingChange(event) {
+    selectedShippingTime = event.target.value;
+
+    if (selectedShippingTime === 'first_option') {
+      shippingPrice = 17.15;
+    } else if (selectedShippingTime === 'second_option') {
+      shippingPrice = 10.96;
+    }
+    calculateGrandTotal()
   }
+
+function handleInputChange(event, field) {
+    userData[field] = event.target.value;
+}
+
+function saveUserDataToLocalStorage() {
+    localStorage.setItem('userData', JSON.stringify(userData));
+    console.log(userData);
+}
+
+onMount(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+        userData = JSON.parse(storedUserData);
+    }
+     if (!userData.countrycode) {
+        userData.countrycode = countries[0].countrycode; 
+    }
+});
 
 </script>
 
@@ -125,15 +155,19 @@ let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được ch�
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*First Name</span>
-                <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {isSubmitted && !firstName ? 'border-red-500' : ''}" bind:value={firstName} />
-                {#if isSubmitted && !firstName}
+                <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {isSubmitted && !userData.firstName ? 'border-red-500' : ''}" 
+                    bind:value={userData.firstName} on:input={(e) => handleInputChange(e, 'firstName')}
+                />
+                {#if isSubmitted && !userData.firstName}
                     <p class="text-red-500 text-xs mx-4">Please enter your first name.</p>
                 {/if}
             </div>
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1" >*Last Name</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !lastName ? 'border-red-500' : ''}" bind:value={lastName} />
-                {#if isSubmitted && !lastName}
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !userData.lastName ? 'border-red-500' : ''}" 
+                bind:value={userData.lastName} 
+                />
+                {#if isSubmitted && !userData.lastName}
                     <p class="text-red-500 text-xs mx-4">Please enter your last name.</p>
                 {/if}
             </div>
@@ -141,8 +175,10 @@ let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được ch�
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*Address line 1</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !address ? 'border-red-500' : ''}" bind:value={address}/>
-                {#if isSubmitted && !address}
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !userData.address ? 'border-red-500' : ''}" 
+                bind:value={userData.address}
+                />
+                {#if isSubmitted && !userData.address}
                     <p class="text-red-500 text-xs mx-4 ">Please enter your address.</p>
                 {/if}
             </div>
@@ -158,19 +194,19 @@ let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được ch�
         <button
             class="flex items-center w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500 bg-white"
             on:click={handleSearchFocus}>
-            {#if selectedCountry}
-            <img src={selectedCountry.flag} alt={selectedCountry.name} class="w-4 h-3 mr-2" />
-                {selectedCountry.name}
-            {:else}
-                Select a country
-            {/if}
-            <span class="ml-auto">
-            {#if showSelect}
-                <i class="fas fa-chevron-up ml-2"></i>
-            {:else}
-                <i class="fas fa-chevron-down ml-2"></i>
-            {/if}
-            </span>
+{#if userData.selectedCountry}
+    <img src={userData.selectedCountry.flag} alt={userData.selectedCountry.name} class="w-4 h-3 mr-2" />
+    {userData.selectedCountry.name}
+{:else}
+    Select a country
+{/if}
+<span class="ml-auto">
+    {#if showSelect}
+        <i class="fas fa-chevron-up ml-2"></i>
+    {:else}
+        <i class="fas fa-chevron-down ml-2"></i>
+    {/if}
+</span>
         </button>
         {#if showSelect}
             <div class="absolute z-10 w-full bg-white border rounded shadow-lg">
@@ -207,8 +243,9 @@ let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được ch�
             </div>
             <div class="flex flex-col w-1/3">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*City</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !city ? 'border-red-500' : ''}" bind:value={city}/>
-                {#if isSubmitted && !city}
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !city ? 'border-red-500' : ''}" 
+                bind:value={userData.city}/>
+                {#if isSubmitted && !userData.city}
                     <p class="text-red-500 text-xs mx-4">Please enter your city.</p>
                 {/if}
             </div>
@@ -216,66 +253,70 @@ let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được ch�
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*Zip/Postal Code</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !zip ? 'border-red-500' : ''}" bind:value={zip}/>
-                {#if isSubmitted && !zip}
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !userData.zip ? 'border-red-500' : ''}" 
+                bind:value={userData.zip}
+                />
+                {#if isSubmitted && !userData.zip}
                     <p class="text-red-500 text-xs mx-4">Please enter your zip/postal code.</p>
                 {/if}
             </div>
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mb-1 ml-4">*Phone Number</span>
                 <div class="flex items-center ml-4 mr-4">
-                    <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {isSubmitted && !phoneNum ? 'border-red-500' : ''}">{selectedCountry.countrycode}</span>
-                    <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isSubmitted && !phoneNum ? 'border-red-500' : ''}" bind:value={phoneNum}/>
+                    <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}">{userData.countrycode}</span>
+                    <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}" 
+                    bind:value={userData.phoneNum}
+                    />
                 </div>
-                {#if isSubmitted && !phoneNum}
+                {#if isSubmitted && !userData.phoneNum}
                     <p class="text-red-500 text-xs mx-4 ">Please enter your phone number.</p>
                 {/if}
                 </div>
             </div>
         
         <div class="flex items-center justify-center">
-            <button class="w-1/5 bg-primary text-white py-2 rounded text-sm hover:bg-secondary mb-8" on:click={handleSubmit}>
+            <button class="w-1/5 bg-primary text-white py-2 rounded text-sm hover:bg-secondary mb-8" on:click={() => {
+                handleSubmit();
+                saveUserDataToLocalStorage();
+            }}>
                 Save
             </button>
         </div>     
         </div>
 
-        <div class="bg-white rounded mb-4">
-            <div>
-
-
-
+    <div class="bg-white rounded mb-4">
+        <div>
 
             <p class="text-stone-700 mx-4 py-4 text-md font-extrabold">Products Ordered</p>
             
             <div class="flex mx-4 mb-8">
             <label
-                class="w-1/3 h-24 border p-4 rounded flex items-center transition duration-300 ease-in-out hover:border-blue-500
-                {selectedPaymentMethod === 'first_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
+                class="w-1/3 h-24 border p-4 rounded flex items-center transition duration-300 ease-in-out hover:border-blue-500 text-sm
+                {selectedShippingTime === 'first_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
                 ">
                 <input
                 type="radio"
                 value="first_option"
-                bind:group={selectedPaymentMethod}
-                on:change={handlePaymentMethodChange}
+                bind:group={selectedShippingTime}
+                on:change={handleShippingChange}
                 />
                 <div class="ml-2 text-stone-700">
                 3 - 7 Business days shipping time
                 <p class="text-sm text-stone-500 pt-1">
-                    US $17.13
+                    US $17.15
                 </p>
                 </div>
             </label>
 
             <label
-                class="w-1/3 h-24 border p-4 rounded flex items-center mx-4 transition duration-300 ease-in-out hover:border-blue-500
-                {selectedPaymentMethod === 'second_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
+                class="w-1/3 h-24 border p-4 rounded flex items-center mx-4 transition duration-300 ease-in-out hover:border-blue-500 text-sm
+                {selectedShippingTime === 'second_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
                 ">
                 <input
                 type="radio"
                 value="second_option"
-                bind:group={selectedPaymentMethod}
-                on:change={handlePaymentMethodChange}
+                bind:group={selectedShippingTime}
+                on:change={handleShippingChange}
                 />
                 <div class="ml-2 text-stone-700">
                 10 - 15 Business days shipping time
@@ -284,10 +325,10 @@ let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được ch�
                 </p>
                 </div>
             </label>
-            </div>
+        
+        </div>
+    </div>
             
-
-</div>
             {#each checkoutItemsData as item}
                 <div class="flex my-4">
                 <img class="w-20 h-20 ml-4" src={item.thumbnailUrl} alt={item.title} />
@@ -310,15 +351,26 @@ let selectedPaymentMethod = ''; // Lưu phương thức thanh toán được ch�
     <div class="w-1/5 h-1/5 py-2 bg-white m-4 sticky top-4 rounded">
         <p class="text-stone-700 border-b mx-4 py-4 text-md font-extrabold">Order Summary</p>
 
-        <p class="py-2 px-4 text-stone-500 text-sm text-left"> Total:
+        <p class="py-1 pt-4 px-4 text-stone-700 text-sm text-left"> Total:
             <span class="float-right">
             {totalProducts === 1 ? `${totalProducts} item` : `${totalProducts} items`}
             </span>
         </p>
-
-        <p class="text-stone-700 text-sm font-bold px-4 text-left flex justify-between items-center">
-            Cart Total: <span class="text-stone-700 float-right text-lg">USD ${totalPrice.toFixed(2)}</span>
+        <p class="py-1 px-4 text-stone-700 text-sm text-left">Sub Total:
+            <span class="float-right">
+                US ${totalPrice.toFixed(2)}
+            </span> 
         </p>
+        <p class="py-1 px-4 text-stone-700 text-sm text-left">Shipping Charge:
+            <span class="float-right">
+                US ${shippingPrice.toFixed(2)}
+            </span> 
+        </p>
+
+        <p class="text-stone-700 text-lg font-bold px-4 my-4 text-left flex justify-between items-center">
+            Grand Total: <span class="text-stone-700 float-right text-lg">US ${(totalPrice + shippingPrice).toFixed(2)}</span>
+        </p>
+        
         <div class="mx-4 my-4">
         <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto " >
             Confirm
