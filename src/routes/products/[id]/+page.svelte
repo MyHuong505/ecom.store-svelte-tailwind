@@ -6,7 +6,7 @@
   let categories =[];
   let product = {
     title: "",
-    prive:"",
+    price:"",
     url: "",
     thumbnailUrl: "",
     categoryId: ""

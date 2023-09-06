@@ -15,6 +15,8 @@ let userData = {
     firstName: "",
     lastName: "",
     address: "",
+    address2: "",
+    state: "",
     city: "",
     zip: "",
     countrycode: "",
@@ -23,14 +25,26 @@ let userData = {
 };
 
 
+
+
 let showSelect = false;
-let isSubmitted = false;
+let isSubmitted = true;
+let defaultMode = true;
+
 
 function handleSubmit() {
+    if (!userData.firstName || !userData.lastName || !userData.address || !userData.city || !userData.zip || !userData.phoneNum || !userData.selectedCountry) {
+        isSubmitted = false;
+    } else {
         isSubmitted = true;
+        saveUserDataToLocalStorage();
+        defaultMode = false;
     }
+}
 
-let search = '';
+
+
+
 let filteredCountries = countries;
     
 
@@ -40,6 +54,7 @@ function filterCountries() {
     });
 }
 
+let search = '';
   
 function handleSearchKeydown(event) {
   if (event.key === 'Enter') {
@@ -50,7 +65,6 @@ function handleSearchKeydown(event) {
     }
   }
 }
-
 
 
 function handleCountryChange(countryCode) {
@@ -132,7 +146,7 @@ function handleInputChange(event, field) {
 
 function saveUserDataToLocalStorage() {
     localStorage.setItem('userData', JSON.stringify(userData));
-    console.log(userData);
+    localStorage.setItem('userData', JSON.stringify(editedUser));
 }
 
 onMount(() => {
@@ -145,29 +159,49 @@ onMount(() => {
     }
 });
 
+let isEditing = false;
+let editedUser = {...userData};
+
+function startEditing() {
+  isEditing = true;
+}
+
+function saveChanges() {
+  isEditing = false;
+  for (const key in userData) {
+    if (userData[key] !== editedUser[key]) {
+      userData[key] = editedUser[key];
+      // Đây là nơi bạn có thể thực hiện cập nhật dữ liệu trong nguồn dữ liệu userData
+    }
+  }
+  saveUserDataToLocalStorage();
+}
+
+
 </script>
 
 
 <div class="bg-gray-100 w-full h-full flex flex-row justify-center">
     <div class="flex flex-col w-3/6">
+    {#if defaultMode}
         <div class=" bg-white overflow-auto my-4 rounded">
-            <div class="text-stone-700 mx-4 my-2 pb-2 pt-4 text-md font-extrabold">Shipping Address</div>
+        <div class="text-stone-700 mx-4 my-2 pb-2 pt-4 text-md font-extrabold">Shipping Address</div>
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*First Name</span>
-                <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {isSubmitted && !userData.firstName ? 'border-red-500' : ''}" 
+                <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {!isSubmitted && !userData.firstName ? 'border-red-500' : ''}" 
                     bind:value={userData.firstName} on:input={(e) => handleInputChange(e, 'firstName')}
                 />
-                {#if isSubmitted && !userData.firstName}
+                {#if !isSubmitted && !userData.firstName}
                     <p class="text-red-500 text-xs mx-4">Please enter your first name.</p>
                 {/if}
             </div>
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1" >*Last Name</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !userData.lastName ? 'border-red-500' : ''}" 
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.lastName ? 'border-red-500' : ''}" 
                 bind:value={userData.lastName} 
                 />
-                {#if isSubmitted && !userData.lastName}
+                {#if !isSubmitted && !userData.lastName}
                     <p class="text-red-500 text-xs mx-4">Please enter your last name.</p>
                 {/if}
             </div>
@@ -175,16 +209,18 @@ onMount(() => {
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*Address line 1</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !userData.address ? 'border-red-500' : ''}" 
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.address ? 'border-red-500' : ''}" 
                 bind:value={userData.address}
                 />
-                {#if isSubmitted && !userData.address}
+                {#if !isSubmitted && !userData.address}
                     <p class="text-red-500 text-xs mx-4 ">Please enter your address.</p>
                 {/if}
             </div>
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">Address line 2 (optional)</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500"  />
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500"  
+                bind:value={userData.address2}
+                />
             </div>
         </div>
         <div class="flex flex-row my-4 mb-8">
@@ -194,19 +230,19 @@ onMount(() => {
         <button
             class="flex items-center w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500 bg-white"
             on:click={handleSearchFocus}>
-{#if userData.selectedCountry}
-    <img src={userData.selectedCountry.flag} alt={userData.selectedCountry.name} class="w-4 h-3 mr-2" />
-    {userData.selectedCountry.name}
-{:else}
-    Select a country
-{/if}
-<span class="ml-auto">
-    {#if showSelect}
-        <i class="fas fa-chevron-up ml-2"></i>
-    {:else}
-        <i class="fas fa-chevron-down ml-2"></i>
-    {/if}
-</span>
+            {#if userData.selectedCountry}
+                <img src={userData.selectedCountry.flag} alt={userData.selectedCountry.name} class="w-4 h-3 mr-2" />
+                {userData.selectedCountry.name}
+            {:else}
+                Select a country
+            {/if}
+            <span class="ml-auto">
+                {#if showSelect}
+                    <i class="fas fa-chevron-up ml-2"></i>
+                {:else}
+                    <i class="fas fa-chevron-down ml-2"></i>
+                {/if}
+            </span>
         </button>
         {#if showSelect}
             <div class="absolute z-10 w-full bg-white border rounded shadow-lg">
@@ -239,13 +275,16 @@ onMount(() => {
             </div>
             <div class="flex flex-col w-1/3">
                 <span class="text-stone-500 text-xs mx-4 mb-1">State/County</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500" />
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500" 
+                bind:value={userData.state}
+                />
             </div>
             <div class="flex flex-col w-1/3">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*City</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !city ? 'border-red-500' : ''}" 
-                bind:value={userData.city}/>
-                {#if isSubmitted && !userData.city}
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.city ? 'border-red-500' : ''}" 
+                bind:value={userData.city}
+                />
+                {#if !isSubmitted && !userData.city}
                     <p class="text-red-500 text-xs mx-4">Please enter your city.</p>
                 {/if}
             </div>
@@ -253,22 +292,22 @@ onMount(() => {
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*Zip/Postal Code</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isSubmitted && !userData.zip ? 'border-red-500' : ''}" 
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.zip ? 'border-red-500' : ''}" 
                 bind:value={userData.zip}
                 />
-                {#if isSubmitted && !userData.zip}
+                {#if !isSubmitted && !userData.zip}
                     <p class="text-red-500 text-xs mx-4">Please enter your zip/postal code.</p>
                 {/if}
             </div>
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mb-1 ml-4">*Phone Number</span>
                 <div class="flex items-center ml-4 mr-4">
-                    <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}">{userData.countrycode}</span>
-                    <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}" 
+                    <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {!isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}">{userData.countrycode}</span>
+                    <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {!isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}" 
                     bind:value={userData.phoneNum}
                     />
                 </div>
-                {#if isSubmitted && !userData.phoneNum}
+                {#if !isSubmitted && !userData.phoneNum}
                     <p class="text-red-500 text-xs mx-4 ">Please enter your phone number.</p>
                 {/if}
                 </div>
@@ -283,6 +322,50 @@ onMount(() => {
             </button>
         </div>     
         </div>
+        {/if}
+
+        {#if !defaultMode}
+        <div class="bg-white overflow-auto my-4 rounded">
+            <div class="text-stone-700 mx-4 my-2 pb-2 pt-4 text-md font-extrabold">Shipping Address</div>
+            <div class="flex flex-row mx-4">
+                <i class="fas fa-map-marker-alt text-red-500 mr-1"></i>
+                <div class="flex flex-col  ">
+                <p class="text-stone-700 font-extrabold text-sm">{userData.firstName} {userData.lastName} {userData.countrycode} {userData.phoneNum}</p>
+                <p class="text-stone-700 text-sm py-1">{userData.address}, {userData.city}, {userData.selectedCountry.name}</p>
+            </div>
+            </div>
+            <button class="text-blue-500 my-4 mx-8 text-sm cursor-pointer" on:click={() => startEditing()} >
+                    Edit
+            </button>
+        </div>
+        {/if}
+
+        {#if isEditing} <!-- Pop-up -->
+            <div class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="absolute inset-0 bg-black opacity-50"></div>
+                <div class="bg-white p-4 w-96 rounded-lg z-10">
+                <div class="mb-4">
+                    <input type="text" bind:value={editedUser.firstName} />
+                    <input type="text" bind:value={editedUser.lastName} />
+                    <input type="text" bind:value={editedUser.address} />
+                    <input type="text" bind:value={editedUser.state} />
+                    <input type="text" bind:value={editedUser.city} />
+                    <input type="text" bind:value={editedUser.phoneNum} />
+                    <input type="text" bind:value={editedUser.zip} />
+                    <input type="text" bind:value={editedUser.countrycode} />
+                    <input type="text" bind:value={editedUser.selectedCountry} />
+                </div>
+                <div class="flex justify-end">
+                    <button class="bg-primary text-white px-4 py-2 rounded mr-2" on:click={saveChanges}>
+                    Save
+                    </button>
+                    <button class="bg-gray-300 px-4 py-2 rounded" on:click={() => isEditing = false}>
+                    Cancel
+                    </button>
+                </div>
+                </div>
+            </div>
+        {/if}
 
     <div class="bg-white rounded mb-4">
         <div>
