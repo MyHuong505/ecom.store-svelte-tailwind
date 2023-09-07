@@ -72,7 +72,11 @@ function handleCountryChange(countryCode) {
     search = userData.selectedCountry.name;
     showSelect = false;
     userData.countrycode = userData.selectedCountry.countrycode;
+
+    editedUser.selectedCountry = userData.selectedCountry;
+    editedUser.countrycode = userData.countrycode;
 }
+
 
 function handleSearchFocus() {
     showSelect = !showSelect;
@@ -126,8 +130,8 @@ $: {
 }
 
 
-let selectedShippingTime = '';
-let shippingPrice = 0;
+let selectedShippingTime = 'first_option';
+let shippingPrice = 17.15;
 
   function handleShippingChange(event) {
     selectedShippingTime = event.target.value;
@@ -140,9 +144,6 @@ let shippingPrice = 0;
     calculateGrandTotal()
   }
 
-function handleInputChange(event, field) {
-    userData[field] = event.target.value;
-}
 
 function saveUserDataToLocalStorage() {
     localStorage.setItem('userData', JSON.stringify(userData));
@@ -164,6 +165,7 @@ let editedUser = {...userData};
 
 function startEditing() {
   isEditing = true;
+  editedUser = { ...userData};
 }
 
 function saveChanges() {
@@ -171,9 +173,9 @@ function saveChanges() {
   for (const key in userData) {
     if (userData[key] !== editedUser[key]) {
       userData[key] = editedUser[key];
-      // Đây là nơi bạn có thể thực hiện cập nhật dữ liệu trong nguồn dữ liệu userData
     }
   }
+
   saveUserDataToLocalStorage();
 }
 
@@ -190,7 +192,7 @@ function saveChanges() {
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*First Name</span>
                 <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {!isSubmitted && !userData.firstName ? 'border-red-500' : ''}" 
-                    bind:value={userData.firstName} on:input={(e) => handleInputChange(e, 'firstName')}
+                    bind:value={userData.firstName}
                 />
                 {#if !isSubmitted && !userData.firstName}
                     <p class="text-red-500 text-xs mx-4">Please enter your first name.</p>
@@ -340,32 +342,135 @@ function saveChanges() {
         </div>
         {/if}
 
-        {#if isEditing} <!-- Pop-up -->
-            <div class="fixed inset-0 flex items-center justify-center z-50">
-                <div class="absolute inset-0 bg-black opacity-50"></div>
-                <div class="bg-white p-4 w-96 rounded-lg z-10">
-                <div class="mb-4">
-                    <input type="text" bind:value={editedUser.firstName} />
-                    <input type="text" bind:value={editedUser.lastName} />
-                    <input type="text" bind:value={editedUser.address} />
-                    <input type="text" bind:value={editedUser.state} />
-                    <input type="text" bind:value={editedUser.city} />
-                    <input type="text" bind:value={editedUser.phoneNum} />
-                    <input type="text" bind:value={editedUser.zip} />
-                    <input type="text" bind:value={editedUser.countrycode} />
-                    <input type="text" bind:value={editedUser.selectedCountry} />
+    {#if isEditing} <!-- Pop-up -->
+        <div class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="absolute  inset-0 bg-black opacity-50"></div>
+        <div class="bg-white w-3/5 p-4 rounded-lg z-10">
+        <div class="mb-4">
+        <div class=" bg-white overflow-auto my-4 rounded">
+        <div class="text-stone-700 mx-4 my-2 pb-2 text-md font-extrabold">Shipping Address</div>
+        <div class="flex flex-row">
+            <div class="flex flex-col w-1/2">
+                <span class="text-stone-500 text-xs mx-4 mb-1">*First Name</span>
+                <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 " 
+                    bind:value={editedUser.firstName}
+                />
+            </div>
+            <div class="flex flex-col w-1/2">
+                <span class="text-stone-500 text-xs mx-4 mb-1" >*Last Name</span>
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 " 
+                bind:value={editedUser.lastName} 
+                />
+            </div>
+        </div>
+        <div class="flex flex-row my-4 ">
+            <div class="flex flex-col w-1/2">
+                <span class="text-stone-500 text-xs mx-4 mb-1">*Address line 1</span>
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 " 
+                bind:value={editedUser.address}
+                />
+            </div>
+            <div class="flex flex-col w-1/2">
+                <span class="text-stone-500 text-xs mx-4 mb-1">Address line 2 (optional)</span>
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500"  
+                bind:value={editedUser.address2}
+                />
+            </div>
+        </div>
+        <div class="flex flex-row my-4 ">
+            <div class="flex flex-col w-1/3">
+            <span class="text-stone-500 text-xs mx-4 mb-1">*Country/Region</span>
+            <div class="relative mx-4">
+        <button
+            class="flex items-center w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500 bg-white"
+            on:click={handleSearchFocus}>
+            {#if editedUser.selectedCountry}
+                <img src={editedUser.selectedCountry.flag} alt={editedUser.selectedCountry.name} class="w-4 h-3 mr-2" />
+                {editedUser.selectedCountry.name}
+            {:else}
+                Select a country
+            {/if}
+            <span class="ml-auto">
+                {#if showSelect}
+                    <i class="fas fa-chevron-up ml-2"></i>
+                {:else}
+                    <i class="fas fa-chevron-down ml-2"></i>
+                {/if}
+            </span>
+        </button>
+        {#if showSelect}
+            <div class="absolute z-10 w-full bg-white border rounded shadow-lg">
+                <input
+                    type="text"
+                    class="w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500"
+                    placeholder="Search country"
+                    bind:value={search}
+                    on:input={filterCountries}
+                    on:keydown={handleSearchKeydown}
+                    on:blur={handleSearchBlur}
+                />
+                {#if showClearButton}
+                <button class="absolute right-4 top-2 text-gray-500" on:click={handleClearSearch}>
+                    <i class="fas fa-times"></i>
+                </button>
+                {/if}
+                {#each filteredCountries as country}
+                    <div
+                        class="flex items-center center-justify px-4 py-2 cursor-pointer hover:bg-gray-100"
+                        on:click={() => handleCountryChange(country.code)}
+                    >
+                        <img src={country.flag} alt={country.name} class="w-4 h-3 mr-2" />
+                        {country.name}
+                    </div>
+                {/each}
+            </div>
+        {/if}
+        </div>
+            </div>
+            <div class="flex flex-col w-1/3">
+                <span class="text-stone-500 text-xs mx-4 mb-1">State/County</span>
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500" 
+                bind:value={editedUser.state}
+                />
+            </div>
+            <div class="flex flex-col w-1/3">
+                <span class="text-stone-500 text-xs mx-4 mb-1">*City</span>
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 " 
+                bind:value={editedUser.city}
+                />
+            </div>
+        </div>
+        <div class="flex flex-row my-4 mb-8">
+            <div class="flex flex-col w-1/2">
+                <span class="text-stone-500 text-xs mx-4 mb-1">*Zip/Postal Code</span>
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 " 
+                bind:value={editedUser.zip}
+                />
+            </div>
+            <div class="flex flex-col w-1/2">
+                <span class="text-stone-500 text-xs mb-1 ml-4">*Phone Number</span>
+                <div class="flex items-center ml-4 mr-4">
+                    <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 ">{editedUser.countrycode}</span>
+                    <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500" 
+                    bind:value={editedUser.phoneNum}
+                    />
                 </div>
-                <div class="flex justify-end">
-                    <button class="bg-primary text-white px-4 py-2 rounded mr-2" on:click={saveChanges}>
-                    Save
+                </div>
+            </div>     
+        </div>
+
+                </div>
+                <div class="flex justify-center">
+                    <button class="bg-primary text-white w-1/6 py-2 rounded mr-4" on:click={saveChanges}>
+                        Save
                     </button>
-                    <button class="bg-gray-300 px-4 py-2 rounded" on:click={() => isEditing = false}>
-                    Cancel
+                    <button class="bg-gray-300 w-1/6 py-2 rounded" on:click={() => isEditing = false}>
+                        Cancel
                     </button>
                 </div>
                 </div>
             </div>
-        {/if}
+        {/if} <!-- Pop-up -->
 
     <div class="bg-white rounded mb-4">
         <div>
@@ -375,37 +480,37 @@ function saveChanges() {
             <div class="flex mx-4 mb-8">
             <label
                 class="w-1/3 h-24 border p-4 rounded flex items-center transition duration-300 ease-in-out hover:border-blue-500 text-sm
-                {selectedShippingTime === 'first_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
+                    {selectedShippingTime === 'first_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
                 ">
                 <input
-                type="radio"
-                value="first_option"
-                bind:group={selectedShippingTime}
-                on:change={handleShippingChange}
+                    type="radio"
+                    value="first_option"
+                    bind:group={selectedShippingTime}
+                    on:change={handleShippingChange}
                 />
                 <div class="ml-2 text-stone-700">
-                3 - 7 Business days shipping time
-                <p class="text-sm text-stone-500 pt-1">
-                    US $17.15
-                </p>
+                    3 - 7 Business days shipping time
+                    <p class="text-sm text-stone-500 pt-1">
+                        US $17.15
+                    </p>
                 </div>
             </label>
 
             <label
                 class="w-1/3 h-24 border p-4 rounded flex items-center mx-4 transition duration-300 ease-in-out hover:border-blue-500 text-sm
-                {selectedShippingTime === 'second_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
+                    {selectedShippingTime === 'second_option' ? 'bg-blue-200 border-blue-500' : ''} cursor-pointer
                 ">
                 <input
-                type="radio"
-                value="second_option"
-                bind:group={selectedShippingTime}
-                on:change={handleShippingChange}
+                    type="radio"
+                    value="second_option"
+                    bind:group={selectedShippingTime}
+                    on:change={handleShippingChange}
                 />
                 <div class="ml-2 text-stone-700">
-                10 - 15 Business days shipping time
-                <p class="text-sm text-stone-500 pt-1">
-                    US $10.96
-                </p>
+                    10 - 15 Business days shipping time
+                    <p class="text-sm text-stone-500 pt-1">
+                        US $10.96
+                    </p>
                 </div>
             </label>
         
