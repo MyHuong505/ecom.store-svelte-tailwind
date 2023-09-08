@@ -2,6 +2,7 @@
 import {onMount} from 'svelte';    
 import {afterUpdate  } from 'svelte';
 import {checkoutItems} from "../../store/cartStore.js";
+import Popup from '../../component/Popup.svelte';
 
 
     const countries = [
@@ -148,6 +149,7 @@ let shippingPrice = 17.15;
 function saveUserDataToLocalStorage() {
     localStorage.setItem('userData', JSON.stringify(userData));
     localStorage.setItem('userData', JSON.stringify(editedUser));
+     isSaved = true;
 }
 
 onMount(() => {
@@ -168,6 +170,8 @@ function startEditing() {
   editedUser = { ...userData};
 }
 
+let isSaved = false;
+
 function saveChanges() {
   isEditing = false;
   for (const key in userData) {
@@ -177,8 +181,22 @@ function saveChanges() {
   }
 
   saveUserDataToLocalStorage();
+  isSaved = true;
 }
 
+let popupOpen = false;
+
+  function showPopup() {
+    if (isSaved) {
+      window.location.href = '/purchase';
+    } else {
+      popupOpen = true;
+    }
+  }
+
+function handlePopupClose() {
+    popupOpen = false;
+}
 
 </script>
 
@@ -560,12 +578,14 @@ function saveChanges() {
         </p>
         
         <div class="mx-4 my-4">
-        <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto " >
-            Confirm
-        </button> 
+
+        <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto" on:click={showPopup}>
+        Confirm
+        </button>
+        
         </div>
-  
     </div>
-     
 </div>
+
+  <Popup isOpen={popupOpen} message="Please complete the form!" on:close={handlePopupClose} />
 

@@ -43,7 +43,6 @@ let isCheckoutPopupVisible = false;
             isCheckoutPopupVisible = true;
         } else {
             updateCheckoutItems(selectedProducts);
-            
             window.location.href = "/checkout";
         }
     }
