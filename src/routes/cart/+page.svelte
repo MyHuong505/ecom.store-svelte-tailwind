@@ -1,7 +1,7 @@
 <script>
     import {onMount} from 'svelte';
     import {cart, plusItem, minusItem, deleteItem, updateCheckoutItems} from "../../store/cartStore.js";
-    
+    import Popup from '../../component/Popup.svelte';
 
 let totalItems = 0;
 let totalPrice = 0;
@@ -33,14 +33,19 @@ let selectAll = false;
         updateTotals();
     }
 
+
+
+let popupOpen = false;
     
-let isCheckoutPopupVisible = false;
+function handlePopupClose() {
+    popupOpen = false;
+}
 
 
     function handleCheckout() {
         const selectedProducts = $cart.filter(item => item.selected);
         if (selectedProducts.length === 0) {
-            isCheckoutPopupVisible = true;
+            popupOpen = true;
         } else {
             updateCheckoutItems(selectedProducts);
             window.location.href = "/checkout";
@@ -115,13 +120,6 @@ let isCheckoutPopupVisible = false;
     </div>
 </div>
 
-{#if isCheckoutPopupVisible}
-    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white p-6 rounded shadow-md">
-            <p class="p-8">You have not selected any items for checkout</p>
-            <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto" on:click={() => isCheckoutPopupVisible = false}>
-                OK
-            </button>
-        </div>
-    </div>
+{#if popupOpen}
+ <Popup isOpen={popupOpen} message="You have not selected any items for checkout." on:close={handlePopupClose} />
 {/if}

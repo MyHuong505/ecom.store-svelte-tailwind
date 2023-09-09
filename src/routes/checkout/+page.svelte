@@ -1,8 +1,8 @@
 <script>
 import {onMount} from 'svelte';    
 import {afterUpdate  } from 'svelte';
-import {checkoutItems} from "../../store/cartStore.js";
 import Popup from '../../component/Popup.svelte';
+import {cart, checkoutItems, updateCheckoutItems} from "../../store/cartStore.js";
 
 
     const countries = [
@@ -186,17 +186,31 @@ function saveChanges() {
 
 let popupOpen = false;
 
+function handlePopupClose() {
+    popupOpen = false;
+}
+
+
   function showPopup() {
     if (isSaved) {
-      window.location.href = '/purchase';
+      confirmCheckout(); 
     } else {
       popupOpen = true;
     }
   }
 
-function handlePopupClose() {
-    popupOpen = false;
+
+
+function confirmCheckout() {
+  const selectedProducts = $cart.filter(item => item.selected);
+  const updatedCart = $cart.filter(item => !item.selected); // Lọc ra các sản phẩm chưa được chọn
+  cart.set(updatedCart); // Cập nhật lại giỏ hàng trong store
+//   window.location.href = "/purchase"; // Chuyển tới trang mua hàng
 }
+
+
+
+
 
 </script>
 
@@ -580,12 +594,13 @@ function handlePopupClose() {
         <div class="mx-4 my-4">
 
         <button class="w-full bg-primary text-white py-2 rounded text-sm hover:bg-secondary mx-auto" on:click={showPopup}>
-        Confirm
+                Confirm
         </button>
         
         </div>
     </div>
 </div>
 
-  <Popup isOpen={popupOpen} message="Please complete the form!" on:close={handlePopupClose} />
-
+{#if popupOpen}
+    <Popup isOpen={popupOpen} message="Please fill in the information." onClose={handlePopupClose} />
+{/if}
