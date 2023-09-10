@@ -2,7 +2,7 @@
 import {onMount} from 'svelte';    
 import {afterUpdate  } from 'svelte';
 import Popup from '../../component/Popup.svelte';
-import {cart, checkoutItems, updateCheckoutItems} from "../../store/cartStore.js";
+import {cart, checkoutItems, updateCheckoutItems, calculateCartTotal} from "../../store/cartStore.js";
 
 
     const countries = [
@@ -199,14 +199,21 @@ function handlePopupClose() {
     }
   }
 
-
-
 function confirmCheckout() {
-  const selectedProducts = $cart.filter(item => item.selected);
-  const updatedCart = $cart.filter(item => !item.selected); // Lọc ra các sản phẩm chưa được chọn
-  cart.set(updatedCart); // Cập nhật lại giỏ hàng trong store
-//   window.location.href = "/purchase"; // Chuyển tới trang mua hàng
+  const currentCart = $cart;
+  const checkoutProducts = checkoutItemsData;
+  const updatedCart = currentCart.filter((item) => {
+    return !checkoutProducts.some((checkoutItem) => checkoutItem.id === item.id);
+  });
+
+  cart.set(updatedCart);
+
+  calculateCartTotal();
+
+  window.location.href = "/purchase";
 }
+
+
 
 
 
