@@ -1,7 +1,10 @@
 <script>
   export let data;
-  import { onMount } from 'svelte';
+  import { onMount  } from 'svelte';
   import {addToCart} from '../../../store/cartStore.js'
+  import RelatedProducts from '../../../component/RelatedProducts.svelte';
+
+
 
   let categories =[];
   let product = {
@@ -22,9 +25,15 @@ onMount(()=>{
  async function fetchData(){
   let res = await fetch(`http://localhost:4000/products/${data.id}`);
   product = await res.json();
+  await fetchRelatedProducts();
   // console.log(product);
  }
- 
+
+async function fetchCategory(){
+ const res = await fetch('http://localhost:4000/categories');
+ categories = await res.json();
+ // console.log(categories);
+}
 
 
 async function editProduct(){
@@ -36,14 +45,6 @@ await fetch(`http://localhost:4000/products/${data.id}`, {
  body: JSON.stringify(product),
 });
   location.reload();
-}
-
-async function fetchCategory(){
-
-const res = await fetch('http://localhost:4000/categories');
- categories = await res.json();
- // console.log(categories);
-
 }
 
 
@@ -63,6 +64,16 @@ async function addToCartAndShowPopup(product) {
     setTimeout(() => {
       showPopup = false; 
     }, 2000); 
+}
+
+let relatedProducts = [];
+
+async function fetchRelatedProducts() {
+  if (product.categoryId) {
+    const res = await fetch(`http://localhost:4000/products?categoryId=${product.categoryId}`);
+    relatedProducts = await res.json();
+    relatedProducts = relatedProducts.filter(item => item.id !== product.id); 
+  }
 }
 
 </script>
@@ -117,3 +128,5 @@ async function addToCartAndShowPopup(product) {
   </div>
 </div>
 {/if}
+
+<RelatedProducts {relatedProducts}/>

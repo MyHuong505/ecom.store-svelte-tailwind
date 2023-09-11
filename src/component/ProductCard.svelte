@@ -9,7 +9,7 @@ function gotoPage(product) {
 
 <div class="grid grid-cols-4 gap-4 mx-24 cursor-pointer my-8">
   {#each products as product}
-    <div on:click={() => gotoPage(product)} class="flex flex-col bg-stone-100 p-4">
+    <div on:click={() => gotoPage(product)} class="flex flex-col bg-white border p-4 rounded shadow hover:shadow-md">
       <img class="max-h-96" src={product.thumbnailUrl} alt={product.title} /> 
       <h3 class="mt-2 text-stone-700 ">{product.title}</h3>
 
