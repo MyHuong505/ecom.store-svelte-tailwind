@@ -2,7 +2,7 @@
 import {onMount} from 'svelte';    
 import {afterUpdate  } from 'svelte';
 import Popup from '../../component/Popup.svelte';
-import {cart, checkoutItems, updateCheckoutItems, calculateCartTotal} from "../../store/cartStore.js";
+import {cart, calculateCartTotal} from "../../store/cartStore.js";
 
 
     const countries = [

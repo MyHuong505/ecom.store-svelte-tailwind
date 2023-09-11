@@ -88,22 +88,33 @@
   </header>
 
 {#if isCartVisible}
-<div class="relative">
-  <div class="triangle absolute bottom-0 right-72 bg-white shadow-md">
-  </div>
-  <div class="fixed right-64 w-96 z-50 rounded grid bg-white drop-shadow-lg"
-      on:mouseenter={handleCartMouseEnter}
-      on:mouseleave={handleCartMouseLeave} 
-  >
-    <ShoppingCart /> 
-    <div class="flex items-center p-4 bg-stone-100">
-      <span class="text-stone-800 text-sm py-2 mr-2 text-xs">
-          {remainingItems === 1 ? `${remainingItems} More Item In Cart` : `${remainingItems} More Items In Cart`} 
-      </span>
-      <button class="bg-primary text-white px-12 py-2 rounded text-sm hover:bg-secondary ml-auto" on:click={handleCartClick}>
-          View My Cart
-      </button>
+  {#if $cart.length === 0}
+  <div class="relative">
+    <div class="triangle absolute bottom-0 right-72 bg-white shadow-md"></div>
+    <div class="fixed right-64 w-1/4 h-1/4 z-50 rounded grid bg-white drop-shadow-lg">
+      <div class="flex flex-col items-center justify-center">
+        <img class="w-1/4 my-4" src="http://doduae.com/image/shopping_cart.gif" alt="empty-shopping-cart" />
+        <p class="text-stone-800">Your shopping cart is empty</p>
+      </div>
     </div>
   </div>
-</div>
+{:else}
+  <div class="relative">
+    <div class="triangle absolute bottom-0 right-72 bg-white shadow-md"></div>
+      <div class="fixed right-64 w-96 z-50 rounded grid bg-white drop-shadow-lg"
+        on:mouseenter={handleCartMouseEnter}
+        on:mouseleave={handleCartMouseLeave} 
+      >
+      <ShoppingCart /> 
+      <div class="flex items-center p-4 bg-stone-100">
+        <span class="text-stone-800 text-sm py-2 mr-2 text-xs">
+            {remainingItems === 1 ? `${remainingItems} More Item In Cart` : `${remainingItems} More Items In Cart`} 
+        </span>
+        <button class="bg-primary text-white px-12 py-2 rounded text-sm hover:bg-secondary ml-auto" on:click={handleCartClick}>
+            View My Cart
+        </button>
+      </div>
+    </div>
+  </div>
+  {/if}
 {/if}
