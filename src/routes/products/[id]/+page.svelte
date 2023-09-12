@@ -76,6 +76,7 @@ async function fetchRelatedProducts() {
   }
 }
 
+
 </script>
 
 {#if isEditing}
@@ -101,21 +102,22 @@ async function fetchRelatedProducts() {
     </div>
   </div>
 {:else}
-<div class="max-w-md mx-auto">
-  <img src={product.thumbnailUrl} alt={product.title} />
 
+  <div class="max-w-md mx-auto">
+  <img src={product.thumbnailUrl} alt={product.title} />
   <div class="py-6">
-    <h3 class="text-xl font-semibold mb-2">{product.title}</h3>
+    <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
     <p class="text-gray-600 text-primary">{product.price}</p>
 
     <div class="py-2">
       <a class="hover:text-primary" href={product.url} > View </a>
-      <button class="hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
-      <button class="hover:text-primary p-2" on:click={() => deleteProduct(data.id)}> Delete </button>
+      <button class="text-stone-700 hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
+      <button class="text-stone-700 hover:text-primary p-2" on:click={() => deleteProduct(data.id)}> Delete </button>
       <button on:click={()=>console.log("Button clicked"), addToCartAndShowPopup(product)}>Add to cart</button>
     </div>
-  
   </div>
+  
+
 </div>
 
 {/if}
@@ -129,4 +131,6 @@ async function fetchRelatedProducts() {
 </div>
 {/if}
 
-<RelatedProducts {relatedProducts}/>
+<RelatedProducts
+  {relatedProducts}
+/>

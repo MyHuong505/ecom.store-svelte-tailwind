@@ -26,6 +26,8 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.4.0",
 		"country-flag-icons": "^1.5.7",
+		"resize-observer-polyfill": "^1.5.1",
+		"svelte-carousel": "^1.0.25",
 		"svelte-icons": "^2.1.0",
 		"svelte-select": "^5.7.0"
 	}
