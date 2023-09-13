@@ -134,3 +134,4 @@ async function fetchRelatedProducts() {
 <RelatedProducts
   {relatedProducts}
 />
+
