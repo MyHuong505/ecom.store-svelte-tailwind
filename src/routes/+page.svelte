@@ -11,7 +11,7 @@ let products = [];
     async function fetchItem() {
         const res = await fetch('http://localhost:4000/products');
         const list = await res.json();
-        products = list.slice(0,10);
+        products = list.slice(0,14);
     }
 
     onMount(()=>{
@@ -21,26 +21,39 @@ let products = [];
 </script>
 
 
-<div class="bg-gray-100 ">
-    <div class="bg-white mx-48 ">
-        
-        <Banner />
-
-        <div class="my-8">
-        <Carousel {products}/>
-        </div>
-
-        <div class="flex justify-center">
-            <h1 class="text-2xl font-bold text-gray-700">New arrivals</h1>
-        </div>
-
-        <HomeProduct {products} />
-
-        <div class="flex justify-center mt-4 mb-8">
-            <a class="font-semibold text-lg text-primary hover:underline" href="/products">View more</a>
-        </div>
-
+<div class="bg-gray-100 flex flex-col ">
+  <div class="mt-2 mx-48">
+    <div class="">
+      <Banner />
     </div>
+  </div>
+
+  <div class="mt-2 mx-48">
+    <div class="flex justify-center mt-8 bg-white border p-2  ">
+        <h1 class="text-2xl font-semibold text-primary">New arrivals</h1>
+    </div>
+            <div class="bg-primary h-1 w-full"></div>
+    <div class="mb-8 mt-4">
+      <Carousel {products}/>
+    </div>
+  </div>
+
+  <div class="mt-2 mx-48">
+        <div class="flex justify-center bg-white border p-2 ">
+            <h1 class="text-2xl font-semibold text-primary">Recommendations for you</h1>
+        </div>
+            <div class="bg-primary h-1 w-full"></div>
+
+        <div class="mb-4 mt-4">
+            <HomeProduct {products} />
+        </div>
+        
+
+        <div class="flex justify-center mt-4 mb-8 ">
+            <a class="font-md bg-white text-sm text-gray-500 border p-2 rounded hover:text-primary hover:border-primary" href="/products">View more</a>
+        </div>
+    </div>
+
 </div>
 
 <Footer/>
