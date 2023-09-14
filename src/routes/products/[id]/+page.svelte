@@ -1,26 +1,34 @@
 <script>
   export let data;
+  import { goto } from "$app/navigation";
   import { onMount  } from 'svelte';
+  import {onDestroy} from 'svelte';
   import {addToCart} from '../../../store/cartStore.js'
   import RelatedProducts from '../../../component/RelatedProducts.svelte';
+  import HomeProduct from '../../../component/HomeProduct.svelte';
 
 
 
   let categories =[];
   let product = {
     title: "",
-    price:"",
+    price: "",
     url: "",
     thumbnailUrl: "",
-    categoryId: ""
-};
+    categoryId: "",
+    relatedImages: [],
+    highlight:"",
+    specifications:{}
+  };
+
   let isEditing = false;
 
 
-onMount(()=>{
-  fetchData();
+onMount(async () => {
+  await fetchData();
   fetchCategory();
-})
+});
+
 
  async function fetchData(){
   let res = await fetch(`http://localhost:4000/products/${data.id}`);
@@ -68,12 +76,19 @@ async function addToCartAndShowPopup(product) {
 
 let relatedProducts = [];
 
+
 async function fetchRelatedProducts() {
   if (product.categoryId) {
     const res = await fetch(`http://localhost:4000/products?categoryId=${product.categoryId}`);
     relatedProducts = await res.json();
     relatedProducts = relatedProducts.filter(item => item.id !== product.id); 
   }
+}
+
+let relatedImages = product.relatedImages;
+
+$: {
+  relatedImages = product.relatedImages;
 }
 
 
@@ -102,23 +117,23 @@ async function fetchRelatedProducts() {
     </div>
   </div>
 {:else}
+<div class="bg-white">
+    <div class="max-w-md mx-auto pt-4">
+    <img src={product.thumbnailUrl} alt={product.title} />
+      <div class="py-6">
+        <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
+        <p class="text-gray-600 text-primary">{product.price}</p>
 
-  <div class="max-w-md mx-auto">
-  <img src={product.thumbnailUrl} alt={product.title} />
-  <div class="py-6">
-    <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
-    <p class="text-gray-600 text-primary">{product.price}</p>
-
-    <div class="py-2">
-      <a class="hover:text-primary" href={product.url} > View </a>
-      <button class="text-stone-700 hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
-      <button class="text-stone-700 hover:text-primary p-2" on:click={() => deleteProduct(data.id)}> Delete </button>
-      <button on:click={()=>console.log("Button clicked"), addToCartAndShowPopup(product)}>Add to cart</button>
+        <div class="py-2">
+          <a class="hover:text-primary" href={product.url} > View </a>
+          <button class="text-stone-700 hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
+          <button class="text-stone-700 hover:text-primary p-2" on:click={() => deleteProduct(data.id)}> Delete </button>
+          <button on:click={()=>console.log("Button clicked"), addToCartAndShowPopup(product)}>Add to cart</button>
+        </div>
+      </div>
     </div>
-  </div>
-  
-
 </div>
+
 
 {/if}
 
@@ -131,7 +146,65 @@ async function fetchRelatedProducts() {
 </div>
 {/if}
 
-<RelatedProducts
-  {relatedProducts}
-/>
+<div class="bg-white">
+  <RelatedProducts {relatedProducts} />
+</div>
+
+
+
+
+<div class="bg-gray-100">
+    <div class="flex justify-center">
+        <div class="bg-white w-2/3 flex flex-col">
+
+            <div class="w-full bg-gray-100">
+            <p class="py-2 px-4 "></p>
+            </div>  
+
+    <div class="py-4 px-8 flex flex-row w-1/2 justify-center items-center">
+      <div class="w-1/3">
+        <a href="#overview" on:click={() => goto('#overview')} 
+          class="text-md text-gray-800  hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Overview</a>
+      </div>
+      <div class="w-1/3">
+        <a href="#photos" on:click={() => goto('#photos')} 
+          class="text-md text-gray-800 w-1/3 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Photos</a>
+      </div>
+      <div class="w-1/3">
+        <a href="#recommendations" on:click={() => goto('#recommendations')} 
+          class="text-md text-gray-800 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Recommendations</a>
+      </div>
+    </div>
+
+            <div class="px-4 border-t">
+                <p id="overview" class="font-extrabold text-sm text-gray-700 py-2">Hightlights</p> 
+                  <p class="text-xs text-stone-600 pb-2">{product.highlight}</p>
+
+                <p class="font-extrabold text-sm text-gray-700 pt-2">Specifications</p>
+                  <table>
+                    <tbody>
+                      <div class="grid grid-cols-3">
+                        {#each Object.entries(product.specifications) as [spec, value]}
+                          <div class="pr-4">
+                            <span class="text-xs text-stone-600">{spec}: {value}</span>
+                          </div>
+                        {/each}
+                      </div>
+                    </tbody>
+                  </table>
+
+                <p id="photos" class="font-extrabold text-sm text-gray-700 py-2">Photos</p>
+                <div class="flex flex-col justify-center items-center">
+                  {#each relatedImages as imageUrl}
+                  <img class="py-2" src={imageUrl} alt="Related Image" />
+                  {/each}
+                </div>
+
+                <p id="recommendations" class="font-extrabold text-sm text-gray-700 pt-2">Recommendations</p>
+                <HomeProduct bind:products={relatedProducts} />
+
+            </div>
+        </div>
+    </div>
+</div>
 
