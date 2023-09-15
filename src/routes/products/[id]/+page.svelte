@@ -6,6 +6,7 @@
   import {addToCart} from '../../../store/cartStore.js'
   import RelatedProducts from '../../../component/RelatedProducts.svelte';
   import HomeProduct from '../../../component/HomeProduct.svelte';
+  import Footer from "../../../component/Footer.svelte";
 
 
 
@@ -162,25 +163,25 @@ $: {
             </div>  
 
     <div class="py-4 px-8 flex flex-row w-1/2 justify-center items-center">
-      <div class="w-1/3">
+      <div class="w-1/3 ">
         <a href="#overview" on:click={() => goto('#overview')} 
-          class="text-md text-gray-800  hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Overview</a>
+          class="text-md text-stone-700  hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Overview</a>
       </div>
-      <div class="w-1/3">
+      <div class="w-1/3 ">
         <a href="#photos" on:click={() => goto('#photos')} 
-          class="text-md text-gray-800 w-1/3 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Photos</a>
+          class="text-md text-stone-700 w-1/3 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Photos</a>
       </div>
-      <div class="w-1/3">
+      <div class="w-1/3 ">
         <a href="#recommendations" on:click={() => goto('#recommendations')} 
-          class="text-md text-gray-800 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Recommendations</a>
+          class="text-md text-stone-700 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Recommendations</a>
       </div>
     </div>
 
-            <div class="px-4 border-t">
-                <p id="overview" class="font-extrabold text-sm text-gray-700 py-2">Hightlights</p> 
+            <div class="px-4 border-t mb-8">
+                <p id="overview" class="font-extrabold text-sm text-stone-700 py-2">Hightlights</p> 
                   <p class="text-xs text-stone-600 pb-2">{product.highlight}</p>
 
-                <p class="font-extrabold text-sm text-gray-700 pt-2">Specifications</p>
+                <p class="font-extrabold text-sm text-stone-700 pt-2">Specifications</p>
                   <table>
                     <tbody>
                       <div class="grid grid-cols-3">
@@ -193,18 +194,20 @@ $: {
                     </tbody>
                   </table>
 
-                <p id="photos" class="font-extrabold text-sm text-gray-700 py-2">Photos</p>
+                <p id="photos" class="font-extrabold text-sm text-stone-700 py-2">Photos</p>
                 <div class="flex flex-col justify-center items-center">
                   {#each relatedImages as imageUrl}
                   <img class="py-2" src={imageUrl} alt="Related Image" />
                   {/each}
                 </div>
 
-                <p id="recommendations" class="font-extrabold text-sm text-gray-700 pt-2">Recommendations</p>
+                <p id="recommendations" class="font-extrabold text-sm text-stone-700 py-2">Recommendations</p>
                 <HomeProduct bind:products={relatedProducts} />
 
             </div>
         </div>
     </div>
+                    <div class="bg-gray-100 w-full py-2"></div>
 </div>
 
+<Footer />

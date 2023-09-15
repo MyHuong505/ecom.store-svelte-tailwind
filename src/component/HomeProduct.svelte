@@ -9,7 +9,8 @@
 
 </script>
 
-    <div class="flex flex-wrap justify-center gap-1">
+<div class="w-full">
+    <div class="flex flex-wrap justify-center w-full">
         {#each products as product}
             <div on:click={() => gotoPage(product)} class="bg-white p-2 cursor-pointer" >
             <img src={product.thumbnailUrl} alt={product.title} class="h-48 object-contain mb-4" />
@@ -18,3 +19,4 @@
             </div>      
         {/each}
     </div>
+</div>

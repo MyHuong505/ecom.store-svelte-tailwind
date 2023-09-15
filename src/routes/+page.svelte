@@ -11,7 +11,7 @@ let products = [];
     async function fetchItem() {
         const res = await fetch('http://localhost:4000/products');
         const list = await res.json();
-        products = list.slice(0,14);
+        products = list.slice(0,21);
     }
 
     onMount(()=>{
