@@ -19,9 +19,9 @@ let products = [];
     })
 
 </script>
+  
 
-
-<div class="bg-gray-100 flex flex-col ">
+<div class="bg-stone-100 flex flex-col ">
   <div class="mt-2 mx-48">
     <div class="">
       <Banner />

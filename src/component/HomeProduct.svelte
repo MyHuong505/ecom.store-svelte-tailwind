@@ -10,12 +10,12 @@
 </script>
 
 <div class="w-full">
-    <div class="flex flex-wrap justify-center w-full">
+    <div class="flex flex-wrap justify-center w-full bg-stone-100">
         {#each products as product}
-            <div on:click={() => gotoPage(product)} class="bg-white p-2 cursor-pointer" >
+            <div on:click={() => gotoPage(product)} class="bg-white m-1 cursor-pointer rounded" >
             <img src={product.thumbnailUrl} alt={product.title} class="h-48 object-contain mb-4" />
-            <h3 class="text-base font-semibold text-gray-600">{product.title}</h3>
-            <p class="font-semibold text-primary">{product.price}</p>
+            <h3 class="text-base font-semibold text-gray-600 px-2">{product.title}</h3>
+            <p class="font-semibold text-primary px-2 pb-2">{product.price}</p>
             </div>      
         {/each}
     </div>
