@@ -19,8 +19,15 @@
     categoryId: "",
     relatedImages: [],
     highlight:"",
-    specifications:{}
+    specifications:{},
+    sizes: ["S", "M", "L"]
   };
+
+let selectedSize = ''; 
+
+  function setSelectedSize(size) {
+    selectedSize = size;
+  }
 
   let isEditing = false;
 
@@ -56,6 +63,7 @@ await fetch(`http://localhost:4000/products/${data.id}`, {
   location.reload();
 }
 
+let isDeletePopupOpen = false;
 
 async function deleteProduct(productId) {
   const response = await fetch(`http://localhost:4000/products/${productId}`, {
@@ -64,6 +72,21 @@ async function deleteProduct(productId) {
   await response.json();
   await fetchData();
 }
+
+function openDeletePopup() {
+  isDeletePopupOpen = true;
+}
+
+async function confirmDelete() {
+  isDeletePopupOpen = false;
+  await deleteProduct(data.id);
+}
+
+function cancelDelete() {
+  isDeletePopupOpen = false;
+}
+
+
 
 let showPopup = false;
 
@@ -126,10 +149,32 @@ $: {
         <p class="text-gray-600 text-primary">{product.price}</p>
 
         <div class="py-2">
+          <div class="flex flex-col">
+            <div class="mb-2 text-sm">Size: <span class="font-semibold text-stone-700">{selectedSize}</span></div>
+            <div>
+            {#each product.sizes as size}
+            <button
+              class="border rounded px-4 py-1 mr-2
+              {selectedSize === size ? 'bg-white text-primary border-primary border-2 font-semibold' : 'border-gray-300 text-gray-700'}"
+              on:click={() => setSelectedSize(size)}
+            >{size}
+            </button>
+            {/each}
+            </div>
+          </div>
+
           <a class="hover:text-primary" href={product.url} > View </a>
           <button class="text-stone-700 hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
-          <button class="text-stone-700 hover:text-primary p-2" on:click={() => deleteProduct(data.id)}> Delete </button>
-          <button on:click={()=>console.log("Button clicked"), addToCartAndShowPopup(product)}>Add to cart</button>
+          <button on:click={openDeletePopup} class="text-stone-700 hover:text-primary p-2"> Delete </button>
+          <button
+            on:click={() => {
+              if (product.size) {
+                addToCartAndShowPopup(product);
+              } 
+            }}
+          >
+            Add to cart
+          </button>
         </div>
       </div>
     </div>
@@ -209,5 +254,18 @@ $: {
     </div>
                     <div class="bg-gray-100 w-full py-2"></div>
 </div>
+
+
+{#if isDeletePopupOpen}
+  <div class="fixed inset-0 flex items-center justify-center">
+    <div class="bg-white p-6 rounded shadow-md">
+      <p class="text-md font-semibold mb-2">Are you sure you want to delete this item?</p>
+      <div class="flex justify-end">
+        <button on:click={confirmDelete} class="text-white bg-primary p-2 mr-2">Yes</button>
+        <button on:click={cancelDelete} class="text-stone-700 hover:text-primary p-2">No</button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <Footer />
