@@ -31,15 +31,22 @@ export function deleteItem(item) {
   calculateCartTotal();
 }
 
-export const addToCart = (product) => {
+export const addToCart = (product, selectedSize) => {
   cart.update((items) => {
-    const existingItem = items.find((item) => item.id === product.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-      return [...items];
+    const existingItemIndex = items.findIndex(
+      (item) => item.id === product.id && item.size === selectedSize
+    );
+    if (existingItemIndex !== -1) {
+      items[existingItemIndex].quantity += 1;
     } else {
-      return [...items, { ...product, quantity: 1 }];
+      const existingItem = items.find((item) => item.id === product.id);
+      if (existingItem) {
+        items = [...items, { ...product, quantity: 1, size: selectedSize }];
+      } else {
+        items = [...items, { ...product, quantity: 1, size: selectedSize }];
+      }
     }
+    return items;
   });
   calculateCartTotal();
 };

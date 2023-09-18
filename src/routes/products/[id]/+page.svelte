@@ -2,8 +2,7 @@
   export let data;
   import { goto } from "$app/navigation";
   import { onMount  } from 'svelte';
-  import {onDestroy} from 'svelte';
-  import {addToCart} from '../../../store/cartStore.js'
+  import {cart, addToCart} from '../../../store/cartStore.js'
   import RelatedProducts from '../../../component/RelatedProducts.svelte';
   import HomeProduct from '../../../component/HomeProduct.svelte';
   import Footer from "../../../component/Footer.svelte";
@@ -23,13 +22,7 @@
     sizes: ["S", "M", "L"]
   };
 
-let selectedSize = ''; 
-
-  function setSelectedSize(size) {
-    selectedSize = size;
-  }
-
-  let isEditing = false;
+let isEditing = false;
 
 
 onMount(async () => {
@@ -63,7 +56,7 @@ await fetch(`http://localhost:4000/products/${data.id}`, {
   location.reload();
 }
 
-let isDeletePopupOpen = false;
+
 
 async function deleteProduct(productId) {
   const response = await fetch(`http://localhost:4000/products/${productId}`, {
@@ -72,6 +65,8 @@ async function deleteProduct(productId) {
   await response.json();
   await fetchData();
 }
+
+let isDeletePopupOpen = false;
 
 function openDeletePopup() {
   isDeletePopupOpen = true;
@@ -86,20 +81,36 @@ function cancelDelete() {
   isDeletePopupOpen = false;
 }
 
+let selectedSize = ''; 
 
+function setSelectedSize(size) {
+  showSizeError = false;
+  selectedSize = size;
+}
+
+let showSizeError = false;
+
+function addToCartClicked() {
+    if (selectedSize) {
+      showSizeError = false; 
+      addToCartAndShowPopup(product, selectedSize);
+    } else {
+      showSizeError = true;
+    }
+  }
 
 let showPopup = false;
 
-async function addToCartAndShowPopup(product) {
-  addToCart(product); 
-    showPopup = true;  
-    setTimeout(() => {
-      showPopup = false; 
-    }, 2000); 
+async function addToCartAndShowPopup(product, selectedSize) {
+  addToCart(product, selectedSize); 
+  console.log(selectedSize);
+  showPopup = true;
+  setTimeout(() => {
+    showPopup = false;
+  }, 2000);
 }
 
 let relatedProducts = [];
-
 
 async function fetchRelatedProducts() {
   if (product.categoryId) {
@@ -142,9 +153,9 @@ $: {
   </div>
 {:else}
 <div class="bg-white">
-    <div class="max-w-md mx-auto pt-4">
+    <div class="max-w mx-auto p-4 flex justify-center">
     <img src={product.thumbnailUrl} alt={product.title} />
-      <div class="py-6">
+      <div class="px-12">
         <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
         <p class="text-gray-600 text-primary">{product.price}</p>
 
@@ -152,29 +163,34 @@ $: {
           <div class="flex flex-col">
             <div class="mb-2 text-sm">Size: <span class="font-semibold text-stone-700">{selectedSize}</span></div>
             <div>
-            {#each product.sizes as size}
-            <button
-              class="border rounded px-4 py-1 mr-2
-              {selectedSize === size ? 'bg-white text-primary border-primary border-2 font-semibold' : 'border-gray-300 text-gray-700'}"
-              on:click={() => setSelectedSize(size)}
-            >{size}
-            </button>
-            {/each}
-            </div>
-          </div>
 
-          <a class="hover:text-primary" href={product.url} > View </a>
-          <button class="text-stone-700 hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
-          <button on:click={openDeletePopup} class="text-stone-700 hover:text-primary p-2"> Delete </button>
-          <button
-            on:click={() => {
-              if (product.size) {
-                addToCartAndShowPopup(product);
-              } 
-            }}
+            {#each product.sizes as size}
+              <button
+                class="border rounded px-4 py-1 mr-2
+                {selectedSize === size ? 'bg-white text-primary border-primary border-2 font-semibold' : 'border-gray-300 text-gray-700'}"
+                on:click={() => setSelectedSize(size)}
+              >{size}
+              </button>
+            {/each}
+
+            </div>
+              {#if showSizeError}
+                <p class="text-red-500">Please Select Size</p>
+              {/if}    
+            </div>
+
+          <button class="my-4 bg-primary text-white text-lg font-bold px-20 py-3 rounded text-sm hover:bg-secondary ml-auto"
+            on:click={addToCartClicked}
           >
-            Add to cart
+            ADD TO CART
           </button>
+
+          <div>
+            <a class="hover:text-primary" href={product.url} > View </a>
+            <button class="text-stone-700 hover:text-primary p-2" on:click={() => { isEditing = true }} > Edit </button>
+            <button on:click={openDeletePopup} class="text-stone-700 hover:text-primary p-2"> Delete </button>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -248,7 +264,6 @@ $: {
 
                 <p id="recommendations" class="font-extrabold text-sm text-stone-700 py-2">Recommendations</p>
                 <HomeProduct bind:products={relatedProducts} />
-
             </div>
         </div>
     </div>
@@ -258,10 +273,10 @@ $: {
 
 {#if isDeletePopupOpen}
   <div class="fixed inset-0 flex items-center justify-center">
-    <div class="bg-white p-6 rounded shadow-md">
-      <p class="text-md font-semibold mb-2">Are you sure you want to delete this item?</p>
+    <div class="bg-white p-6 rounded border shadow-md">
+      <p class="text-stone-700 text-md font-semibold mb-2">Are you sure you want to delete this item?</p>
       <div class="flex justify-end">
-        <button on:click={confirmDelete} class="text-white bg-primary p-2 mr-2">Yes</button>
+        <button on:click={confirmDelete} class="text-stone-700 hover:text-primary p-2 mr-4">Yes</button>
         <button on:click={cancelDelete} class="text-stone-700 hover:text-primary p-2">No</button>
       </div>
     </div>
