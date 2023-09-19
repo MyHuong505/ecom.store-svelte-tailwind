@@ -126,6 +126,40 @@ $: {
   relatedImages = product.relatedImages;
 }
 
+  let activeSection = '';
+
+  function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  }
+
+  function checkActiveSection() {
+    const sections = ['overview', 'photos', 'recommendations'];
+    let foundActiveSection = false;
+
+    for (const sectionId of sections) {
+      const section = document.getElementById(sectionId);
+      if (isElementInViewport(section)) {
+        activeSection = sectionId;
+        foundActiveSection = true;
+        break;
+      }
+    }
+
+    if (!foundActiveSection) {
+      activeSection = '';
+    }
+  }
+
+  onMount(() => {
+    window.addEventListener('scroll', checkActiveSection);
+    checkActiveSection(); // Gọi hàm này một lần để xác định phần tử đầu tiên
+  });
 
 </script>
 
@@ -226,44 +260,37 @@ $: {
     <div class="py-4 px-8 flex flex-row w-1/2 justify-center items-center">
       <div class="w-1/3 ">
         <a href="#overview" on:click={() => goto('#overview')} 
-          class="text-md text-stone-700  hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Overview</a>
-      </div>
-      <div class="w-1/3 ">
-        <a href="#photos" on:click={() => goto('#photos')} 
-          class="text-md text-stone-700 w-1/3 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Photos</a>
-      </div>
-      <div class="w-1/3 ">
-        <a href="#recommendations" on:click={() => goto('#recommendations')} 
-          class="text-md text-stone-700 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Recommendations</a>
+                  class="{activeSection === 'overview' ? 'text-md text-primary font-extrabold scale-110' : 'text-md text-stone-700'} leading-none ">Overview</a>
+              </div>
+              <div class="w-1/3 ">
+                <a href="#photos" on:click={() => goto('#photos')} 
+                  class="{activeSection === 'photos' ? 'text-md text-primary font-extrabold scale-110' : 'text-md text-stone-700'} leading-none ">Photos</a>
+              </div>
+              <div class="w-1/3 ">
+                <a href="#recommendations" on:click={() => goto('#recommendations')} 
+                  class="{activeSection === 'recommendations' ? 'text-md text-primary font-extrabold scale-110' : 'text-md text-stone-700'} leading-none ">Recommendations</a>
       </div>
     </div>
 
             <div class="px-4 border-t mb-8">
-                <p id="overview" class="font-extrabold text-sm text-stone-700 py-2">Hightlights</p> 
-                  <p class="text-xs text-stone-600 pb-2">{product.highlight}</p>
+               <section id="overview">
+                <p class="font-extrabold text-sm text-stone-700 py-2">Highlights</p> 
+                <p class="text-xs text-stone-600 pb-2">{product.highlight}</p>
+              </section>
 
-                <p class="font-extrabold text-sm text-stone-700 pt-2">Specifications</p>
-                  <table>
-                    <tbody>
-                      <div class="grid grid-cols-3">
-                        {#each Object.entries(product.specifications) as [spec, value]}
-                          <div class="pr-4">
-                            <span class="text-xs text-stone-600">{spec}: {value}</span>
-                          </div>
-                        {/each}
-                      </div>
-                    </tbody>
-                  </table>
-
-                <p id="photos" class="font-extrabold text-sm text-stone-700 py-2">Photos</p>
+              <section id="photos">
+                <p class="font-extrabold text-sm text-stone-700 py-2">Photos</p>
                 <div class="flex flex-col justify-center items-center">
                   {#each relatedImages as imageUrl}
                   <img class="py-2" src={imageUrl} alt="Related Image" />
                   {/each}
                 </div>
+              </section>
 
-                <p id="recommendations" class="font-extrabold text-sm text-stone-700 py-2">Recommendations</p>
+              <section id="recommendations">
+                <p class="font-extrabold text-sm text-stone-700 py-2">Recommendations</p>
                 <HomeProduct bind:products={relatedProducts} />
+              </section>
             </div>
         </div>
     </div>
@@ -284,3 +311,11 @@ $: {
 {/if}
 
 <Footer />
+
+<div class="fixed top-0 left-0 right-0 bg-white border-b border-gray-300 z-10">
+  <div class="container flex py-4">
+    <a href="#overview" on:click={() => goto('#overview')} class="{activeSection === 'overview' ? 'text-primary font-semibold' : 'text-stone-700'} text-lg">Overview</a>
+    <a href="#photos" on:click={() => goto('#photos')} class="{activeSection === 'photos' ? 'text-primary font-semibold' : 'text-stone-700'} text-lg ml-8">Photos</a>
+    <a href="#recommendations" on:click={() => goto('#recommendations')} class="{activeSection === 'recommendations' ? 'text-primary font-semibold' : 'text-stone-700'} text-lg ml-8">Recommendations</a>
+  </div>
+</div>

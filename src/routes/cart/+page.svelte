@@ -9,8 +9,7 @@ let totalPrice = 0;
 function updateTotals() {
     totalItems = $cart.reduce((sum, item) => item.selected ? sum + item.quantity : sum, 0);
     totalPrice = $cart.reduce((sum, item) => item.selected ? sum + parseFloat(item.price.replace('$', '')) * item.quantity : sum, 0);
-    const selectedProducts = $cart.filter(item => item.selected);
-    
+    const selectedProducts = $cart.filter(item => item.selected);   
 }
 
 onMount(() => {
@@ -92,8 +91,9 @@ function handlePopupClose() {
                     <p class="font-md text-md text-primary text-right">${(item.price.replace('$', '') * item.quantity).toFixed(2)}</p>
                 </div>
                 </div>
+                <div class="w-1/6 mx-4 text-stone-700 text-sm border p-2 rounded">Size - {item.size}</div>
                 <div class="flex justify-end mt-12 mx-4">
-                <button class="text-stone-500 text-xs mt-6" on:click={() => deleteItem(item)}>
+                <button class="text-stone-500 text-xs " on:click={() => deleteItem(item)}>
                     Remove
                 </button>
                 </div>
