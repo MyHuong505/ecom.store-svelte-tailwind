@@ -1,7 +1,7 @@
 <script>
   export let data;
   import { goto } from "$app/navigation";
-  import { onMount  } from 'svelte';
+  import { onMount, onDestroy  } from 'svelte';
   import {cart, addToCart} from '../../../store/cartStore.js'
   import RelatedProducts from '../../../component/RelatedProducts.svelte';
   import HomeProduct from '../../../component/HomeProduct.svelte';
@@ -126,40 +126,22 @@ $: {
   relatedImages = product.relatedImages;
 }
 
-  let activeSection = '';
+  let tabs = [
+    { id: 'overview', title: 'Overview' },
+    { id: 'photos', title: 'Photos' },
+    { id: 'recommendations', title: 'Recommendations' }
+  ];
 
-  function isElementInViewport(el) {
-    const rect = el.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
+ function handleTabClick(tabId) {
+    tabs.forEach(tab => {
+      tab.isActive = tab.id === tabId;
+    });
+    const tabContent = document.getElementById(tabId);
+    window.scrollTo({
+      top: tabContent.offsetTop - 60,
+      behavior: 'smooth'
+    });
   }
-
-  function checkActiveSection() {
-    const sections = ['overview', 'photos', 'recommendations'];
-    let foundActiveSection = false;
-
-    for (const sectionId of sections) {
-      const section = document.getElementById(sectionId);
-      if (isElementInViewport(section)) {
-        activeSection = sectionId;
-        foundActiveSection = true;
-        break;
-      }
-    }
-
-    if (!foundActiveSection) {
-      activeSection = '';
-    }
-  }
-
-  onMount(() => {
-    window.addEventListener('scroll', checkActiveSection);
-    checkActiveSection(); // Gọi hàm này một lần để xác định phần tử đầu tiên
-  });
 
 </script>
 
@@ -246,57 +228,54 @@ $: {
   <RelatedProducts {relatedProducts} />
 </div>
 
-
-
-
 <div class="bg-gray-100">
-    <div class="flex justify-center">
-        <div class="bg-white w-2/3 flex flex-col">
+  <div class="flex justify-center">
+    <div class="bg-white w-2/3 flex flex-col">
 
-            <div class="w-full bg-gray-100">
-            <p class="py-2 px-4 "></p>
-            </div>  
+      <div class="w-full bg-gray-100">
+      <p class="py-2 px-4 "></p>
+      </div>  
 
-    <div class="py-4 px-8 flex flex-row w-1/2 justify-center items-center">
-      <div class="w-1/3 ">
+      <div class="py-4 px-8 flex flex-row w-1/2 justify-center items-center">
+        <div class="w-1/3 ">
         <a href="#overview" on:click={() => goto('#overview')} 
-                  class="{activeSection === 'overview' ? 'text-md text-primary font-extrabold scale-110' : 'text-md text-stone-700'} leading-none ">Overview</a>
-              </div>
-              <div class="w-1/3 ">
-                <a href="#photos" on:click={() => goto('#photos')} 
-                  class="{activeSection === 'photos' ? 'text-md text-primary font-extrabold scale-110' : 'text-md text-stone-700'} leading-none ">Photos</a>
-              </div>
-              <div class="w-1/3 ">
-                <a href="#recommendations" on:click={() => goto('#recommendations')} 
-                  class="{activeSection === 'recommendations' ? 'text-md text-primary font-extrabold scale-110' : 'text-md text-stone-700'} leading-none ">Recommendations</a>
-      </div>
-    </div>
-
-            <div class="px-4 border-t mb-8">
-               <section id="overview">
-                <p class="font-extrabold text-sm text-stone-700 py-2">Highlights</p> 
-                <p class="text-xs text-stone-600 pb-2">{product.highlight}</p>
-              </section>
-
-              <section id="photos">
-                <p class="font-extrabold text-sm text-stone-700 py-2">Photos</p>
-                <div class="flex flex-col justify-center items-center">
-                  {#each relatedImages as imageUrl}
-                  <img class="py-2" src={imageUrl} alt="Related Image" />
-                  {/each}
-                </div>
-              </section>
-
-              <section id="recommendations">
-                <p class="font-extrabold text-sm text-stone-700 py-2">Recommendations</p>
-                <HomeProduct bind:products={relatedProducts} />
-              </section>
-            </div>
+          class="text-md text-stone-700  hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Overview</a>
         </div>
-    </div>
-                    <div class="bg-gray-100 w-full py-2"></div>
-</div>
+        <div class="w-1/3 ">
+          <a href="#photos" on:click={() => goto('#photos')} 
+            class="text-md text-stone-700 w-1/3 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Photos</a>
+        </div>
+        <div class="w-1/3 ">
+          <a href="#recommendations" on:click={() => goto('#recommendations')} 
+            class="text-md text-stone-700 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Recommendations</a>
+        </div>
+      </div>
 
+      <div class="px-4 border-t mb-8">
+        <section id="overview" class="section">
+          <p class="font-extrabold text-sm text-stone-700 py-2">Highlights</p> 
+          <p class="text-xs text-stone-600 pb-2">{product.highlight}</p>
+        </section>
+
+        <section id="photos" class="section">
+          <p class="font-extrabold text-sm text-stone-700 py-2">Photos</p>
+          <div class="flex flex-col justify-center items-center">
+            {#each relatedImages as imageUrl}
+            <img class="py-2" src={imageUrl} alt="Related Image" />
+            {/each}
+          </div>
+        </section>
+
+        <section id="recommendations" class="section">
+          <p class="font-extrabold text-sm text-stone-700 py-2">Recommendations</p>
+          <HomeProduct bind:products={relatedProducts} />
+        </section>
+      </div>
+
+    </div>
+  </div>
+      <div class="bg-gray-100 w-full py-2"></div>
+</div>
 
 {#if isDeletePopupOpen}
   <div class="fixed inset-0 flex items-center justify-center">
@@ -313,9 +292,13 @@ $: {
 <Footer />
 
 <div class="fixed top-0 left-0 right-0 bg-white border-b border-gray-300 z-10">
-  <div class="container flex py-4">
-    <a href="#overview" on:click={() => goto('#overview')} class="{activeSection === 'overview' ? 'text-primary font-semibold' : 'text-stone-700'} text-lg">Overview</a>
-    <a href="#photos" on:click={() => goto('#photos')} class="{activeSection === 'photos' ? 'text-primary font-semibold' : 'text-stone-700'} text-lg ml-8">Photos</a>
-    <a href="#recommendations" on:click={() => goto('#recommendations')} class="{activeSection === 'recommendations' ? 'text-primary font-semibold' : 'text-stone-700'} text-lg ml-8">Recommendations</a>
-  </div>
+ {#each tabs as tab}
+    <button
+      class="{tab.isActive ? 'bg-primary text-white' : ''} mx-4"
+      on:click={() => handleTabClick(tab.id)}
+    >
+      {tab.title}
+    </button>
+  {/each}
+      
 </div>
