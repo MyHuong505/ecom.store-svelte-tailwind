@@ -126,22 +126,15 @@ $: {
   relatedImages = product.relatedImages;
 }
 
-  let tabs = [
-    { id: 'overview', title: 'Overview' },
-    { id: 'photos', title: 'Photos' },
-    { id: 'recommendations', title: 'Recommendations' }
-  ];
+let activeTab = 'overview';
 
- function handleTabClick(tabId) {
-    tabs.forEach(tab => {
-      tab.isActive = tab.id === tabId;
-    });
-    const tabContent = document.getElementById(tabId);
-    window.scrollTo({
-      top: tabContent.offsetTop - 60,
-      behavior: 'smooth'
-    });
+function changeTab(tab) {
+  const section = document.getElementById(tab);
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' });
   }
+  activeTab = tab;
+}
 
 </script>
 
@@ -291,14 +284,36 @@ $: {
 
 <Footer />
 
-<div class="fixed top-0 left-0 right-0 bg-white border-b border-gray-300 z-10">
- {#each tabs as tab}
-    <button
-      class="{tab.isActive ? 'bg-primary text-white' : ''} mx-4"
-      on:click={() => handleTabClick(tab.id)}
-    >
-      {tab.title}
-    </button>
-  {/each}
-      
-</div>
+<style>
+  .active {
+    background-color: blueviolet;
+    color: white;
+  }
+</style>
+
+<nav class="flex fixed top-0">
+  <a
+    class="px-4 py-2 cursor-pointer"
+    class:active={activeTab === 'overview'}
+    on:click={() => changeTab('overview')}
+    href="#overview"
+  >
+    Overview
+  </a>
+  <a
+    class="px-4 py-2 cursor-pointer"
+    class:active={activeTab === 'photos'}
+    on:click={() => changeTab('photos')}
+    href="#photos"
+  >
+    Photos
+  </a>
+  <a
+    class="px-4 py-2 cursor-pointer"
+    class:active={activeTab === 'recommendations'}
+    on:click={() => changeTab('recommendations')}
+    href="#recommendations"
+  >
+    Recommendations
+  </a>
+</nav>
