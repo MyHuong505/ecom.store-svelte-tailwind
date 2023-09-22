@@ -129,11 +129,16 @@ $: {
 let activeTab = 'overview';
 
 function changeTab(tab) {
-  const section = document.getElementById(tab);
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth' });
-  }
   activeTab = tab;
+  const targetSection = document.getElementById(tab);
+
+    if (targetSection) {
+      targetSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
+    }
 }
 
 </script>
@@ -291,29 +296,26 @@ function changeTab(tab) {
   }
 </style>
 
-<nav class="flex fixed top-0">
+<nav class="flex justify-center w-full bg-white fixed top-0">
+  <div class="w-4/6 flex">
   <a
-    class="px-4 py-2 cursor-pointer"
-    class:active={activeTab === 'overview'}
+    class="w-48 flex items-center justify-center px-4 py-2 cursor-pointer transition-colors {activeTab === 'overview' ? 'bg-white text-primary border-bottom font-extrabold border-b-4 border-primary' : 'hover:bg-gray-200'}"
     on:click={() => changeTab('overview')}
-    href="#overview"
   >
     Overview
   </a>
   <a
-    class="px-4 py-2 cursor-pointer"
-    class:active={activeTab === 'photos'}
+    class="w-48 flex items-center justify-center px-4 py-2 cursor-pointer transition-colors {activeTab === 'photos' ? 'bg-white text-primary border-bottom font-extrabold border-b-4 border-primary' : 'hover:bg-gray-200'}"
     on:click={() => changeTab('photos')}
-    href="#photos"
   >
     Photos
   </a>
   <a
-    class="px-4 py-2 cursor-pointer"
-    class:active={activeTab === 'recommendations'}
+    class="w-48 flex items-center justify-center px-4 py-2 cursor-pointer transition-colors {activeTab === 'recommendations' ? 'bg-white text-primary border-bottom font-extrabold border-b-4 border-primary' : 'hover:bg-gray-200'}"
     on:click={() => changeTab('recommendations')}
-    href="#recommendations"
   >
     Recommendations
   </a>
+  </div>
+
 </nav>
