@@ -6,6 +6,7 @@
   import RelatedProducts from '../../../component/RelatedProducts.svelte';
   import HomeProduct from '../../../component/HomeProduct.svelte';
   import Footer from "../../../component/Footer.svelte";
+  import NavBar from "../../../component/NavBar.svelte";
 
 
 
@@ -126,20 +127,7 @@ $: {
   relatedImages = product.relatedImages;
 }
 
-let activeTab = 'overview';
 
-function changeTab(tab) {
-  activeTab = tab;
-  const targetSection = document.getElementById(tab);
-
-    if (targetSection) {
-      targetSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: 'nearest',
-      });
-    }
-}
 
 </script>
 
@@ -250,12 +238,12 @@ function changeTab(tab) {
       </div>
 
       <div class="px-4 border-t mb-8">
-        <section id="overview" class="section">
+        <section id="overview">
           <p class="font-extrabold text-sm text-stone-700 py-2">Highlights</p> 
           <p class="text-xs text-stone-600 pb-2">{product.highlight}</p>
         </section>
 
-        <section id="photos" class="section">
+        <section id="photos">
           <p class="font-extrabold text-sm text-stone-700 py-2">Photos</p>
           <div class="flex flex-col justify-center items-center">
             {#each relatedImages as imageUrl}
@@ -264,7 +252,7 @@ function changeTab(tab) {
           </div>
         </section>
 
-        <section id="recommendations" class="section">
+        <section id="recommendations">
           <p class="font-extrabold text-sm text-stone-700 py-2">Recommendations</p>
           <HomeProduct bind:products={relatedProducts} />
         </section>
@@ -287,35 +275,7 @@ function changeTab(tab) {
   </div>
 {/if}
 
+
+<NavBar />
+
 <Footer />
-
-<style>
-  .active {
-    background-color: blueviolet;
-    color: white;
-  }
-</style>
-
-<nav class="flex justify-center w-full bg-white fixed top-0">
-  <div class="w-4/6 flex">
-  <a
-    class="w-48 flex items-center justify-center px-4 py-2 cursor-pointer transition-colors {activeTab === 'overview' ? 'bg-white text-primary border-bottom font-extrabold border-b-4 border-primary' : 'hover:bg-gray-200'}"
-    on:click={() => changeTab('overview')}
-  >
-    Overview
-  </a>
-  <a
-    class="w-48 flex items-center justify-center px-4 py-2 cursor-pointer transition-colors {activeTab === 'photos' ? 'bg-white text-primary border-bottom font-extrabold border-b-4 border-primary' : 'hover:bg-gray-200'}"
-    on:click={() => changeTab('photos')}
-  >
-    Photos
-  </a>
-  <a
-    class="w-48 flex items-center justify-center px-4 py-2 cursor-pointer transition-colors {activeTab === 'recommendations' ? 'bg-white text-primary border-bottom font-extrabold border-b-4 border-primary' : 'hover:bg-gray-200'}"
-    on:click={() => changeTab('recommendations')}
-  >
-    Recommendations
-  </a>
-  </div>
-
-</nav>
