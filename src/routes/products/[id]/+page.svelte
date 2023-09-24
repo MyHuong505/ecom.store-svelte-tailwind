@@ -1,7 +1,7 @@
 <script>
   export let data;
   import { goto } from "$app/navigation";
-  import { onMount, onDestroy  } from 'svelte';
+  import { onMount } from 'svelte';
   import {cart, addToCart} from '../../../store/cartStore.js'
   import RelatedProducts from '../../../component/RelatedProducts.svelte';
   import HomeProduct from '../../../component/HomeProduct.svelte';
@@ -127,6 +127,24 @@ $: {
   relatedImages = product.relatedImages;
 }
 
+let quantity = 1
+
+function incrementQuantity() {
+  quantity += 1;
+}
+
+function decrementQuantity() {
+  if (quantity > 1) {
+    quantity -= 1;
+  }
+}
+
+function handleQuantityInput(event) {
+  const inputValue = parseInt(event.target.value, 10);
+  if (!isNaN(inputValue) && inputValue >= 1) {
+    quantity = inputValue;
+  }
+}
 
 
 </script>
@@ -168,12 +186,23 @@ $: {
 
             {#each product.sizes as size}
               <button
-                class="border rounded px-4 py-1 mr-2
+                class="border rounded px-6 py-1 mr-3
                 {selectedSize === size ? 'bg-white text-primary border-primary border-2 font-semibold' : 'border-gray-300 text-gray-700'}"
                 on:click={() => setSelectedSize(size)}
               >{size}
               </button>
             {/each}
+
+            <div class="flex items-center mt-6">
+              <p>Quantity:</p>
+              <button class="mx-4 w-8 h-8 border border-gray-300 rounded flex items-center justify-center" on:click={decrementQuantity}>
+                -
+              </button>
+              <input type="number" class="w-12 h-8 py-1 border border-gray-300 rounded outline-none" bind:value={quantity} on:input={handleQuantityInput} />
+              <button class="mx-4 w-8 h-8 border border-gray-300 rounded flex items-center justify-center" on:click={incrementQuantity}>
+                +
+              </button>
+            </div>
 
             </div>
               {#if showSizeError}
@@ -222,16 +251,16 @@ $: {
       <p class="py-2 px-4 "></p>
       </div>  
 
-      <div class="py-4 px-8 flex flex-row w-1/2 justify-center items-center">
-        <div class="w-1/3 ">
+      <div class=" flex flex-row w-1/2 justify-center items-center">
+        <div class="w-1/3 flex items-center">
         <a href="#overview" on:click={() => goto('#overview')} 
-          class="text-md text-stone-700  hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Overview</a>
+          class="px-14 py-2 cursor-pointer bg-white text-primary border-bottom font-extrabold border-b-4 border-primary">Overview</a>
         </div>
-        <div class="w-1/3 ">
+        <div class="w-1/3 flex  justify-center items-center">
           <a href="#photos" on:click={() => goto('#photos')} 
             class="text-md text-stone-700 w-1/3 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Photos</a>
         </div>
-        <div class="w-1/3 ">
+        <div class="w-1/3 flex justify-center items-center">
           <a href="#recommendations" on:click={() => goto('#recommendations')} 
             class="text-md text-stone-700 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Recommendations</a>
         </div>

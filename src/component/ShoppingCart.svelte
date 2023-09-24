@@ -38,10 +38,14 @@ onMount(() => {
         <div class="flex my-2">
             <button class="mx-4 w-5 h-5 border border-gray-300 rounded px-2 flex items-center justify-center 
                     {item.quantity === 1 ? 'text-gray-300 border-gray-300 cursor-default' : ''}" 
-                    on:click={() => minusItem(item)}>-</button>            
+                    on:click={() => minusItem(item)}>
+                    -
+            </button>            
             <span class="w-4 text-center text-sm text-stone-700">{item.quantity}</span>
             <button class="mx-4 w-5 h-5 border border-gray-300 rounded px-2 flex items-center justify-center" 
-                    on:click={() => plusItem(item)}>+</button>
+                    on:click={() => plusItem(item)}>
+                    +
+            </button>
             <button class="text-stone-500 text-xs ml-auto mt-auto" on:click={() => deleteItem(item)}>Remove</button>
         </div>
       </div>
