@@ -127,24 +127,27 @@ $: {
   relatedImages = product.relatedImages;
 }
 
-let quantity = 1
+let quantity = 1;
 
-function incrementQuantity() {
-  quantity += 1;
-}
+  function handleQuantityInput(event) {
+    const inputValue = parseInt(event.target.value); 
 
-function decrementQuantity() {
-  if (quantity > 1) {
-    quantity -= 1;
+    if (isNaN(inputValue) || inputValue <= 0) {
+      quantity = 1; 
+    } else {
+      quantity = inputValue;
+    }
   }
-}
 
-function handleQuantityInput(event) {
-  const inputValue = parseInt(event.target.value, 10);
-  if (!isNaN(inputValue) && inputValue >= 1) {
-    quantity = inputValue;
+  function decrementQuantity() {
+    if (quantity > 1) {
+      quantity--;
+    }
   }
-}
+
+  function incrementQuantity() {
+    quantity++;
+  }
 
 
 </script>
