@@ -198,11 +198,14 @@ let quantity = 1;
 
             <div class="flex items-center mt-6">
               <p>Quantity:</p>
-              <button class="mx-4 w-8 h-8 border border-gray-300 rounded flex items-center justify-center" on:click={decrementQuantity}>
+              <button class="mx-4 w-8 h-8 border border-gray-300 rounded flex items-center justify-center" 
+                on:click={decrementQuantity}>
                 -
               </button>
-              <input type="number" class="w-12 h-8 py-1 border border-gray-300 rounded outline-none" bind:value={quantity} on:input={handleQuantityInput} />
-              <button class="mx-4 w-8 h-8 border border-gray-300 rounded flex items-center justify-center" on:click={incrementQuantity}>
+              <input type="number" class="w-12 h-8 flex items-center py-1 focus:border rounded outline-none text-center" 
+                bind:value={quantity} on:input={handleQuantityInput} />
+              <button class="mx-4 w-8 h-8 border border-gray-300 rounded flex items-center justify-center" 
+                on:click={incrementQuantity}>
                 +
               </button>
             </div>
