@@ -130,14 +130,15 @@ $: {
 let quantity = 1;
 
   function handleQuantityInput(event) {
-    const inputValue = parseInt(event.target.value); 
+  let inputValue = parseInt(event.target.value);
 
-    if (isNaN(inputValue) || inputValue <= 0) {
-      quantity = 1; 
-    } else {
-      quantity = inputValue;
-    }
-  }
+  if (isNaN(inputValue) || inputValue <= 0) {
+    quantity = 1;
+  } else if (inputValue > 99) {
+    quantity = 99;
+  } else {
+    quantity = inputValue;
+  }}
 
   function decrementQuantity() {
     if (quantity > 1) {
