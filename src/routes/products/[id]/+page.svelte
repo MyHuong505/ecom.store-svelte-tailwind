@@ -94,7 +94,7 @@ let showSizeError = false;
 function addToCartClicked() {
     if (selectedSize) {
       showSizeError = false; 
-      addToCartAndShowPopup(product, selectedSize);
+      addToCartAndShowPopup(product, selectedSize, inputValue);
     } else {
       showSizeError = true;
     }
@@ -102,9 +102,8 @@ function addToCartClicked() {
 
 let showPopup = false;
 
-async function addToCartAndShowPopup(product, selectedSize) {
-  addToCart(product, selectedSize); 
-  console.log(selectedSize);
+async function addToCartAndShowPopup(product, selectedSize, inputValue) {
+  addToCart(product, selectedSize, inputValue); 
   showPopup = true;
   setTimeout(() => {
     showPopup = false;
@@ -203,8 +202,10 @@ let quantity = 1;
                 on:click={decrementQuantity}>
                 -
               </button>
-              <input type="number" class="w-12 h-8 flex items-center py-1 focus:border rounded outline-none text-center" 
-                bind:value={quantity} on:input={handleQuantityInput} />
+              <input type="number" class="w-12 h-8 flex items-center py-1 focus:border rounded outline-none text-center "  
+                bind:value={quantity} on:input={handleQuantityInput}
+                 
+                />
               <button class="mx-4 w-8 h-8 border border-gray-300 rounded flex items-center justify-center" 
                 on:click={incrementQuantity}>
                 +

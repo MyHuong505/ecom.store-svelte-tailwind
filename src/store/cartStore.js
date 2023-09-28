@@ -31,19 +31,25 @@ export function deleteItem(item) {
   calculateCartTotal();
 }
 
-export const addToCart = (product, selectedSize) => {
+export const addToCart = (product, selectedSize, inputValue) => {
   cart.update((items) => {
     const existingItemIndex = items.findIndex(
       (item) => item.id === product.id && item.size === selectedSize
     );
     if (existingItemIndex !== -1) {
-      items[existingItemIndex].quantity += 1;
+      items[existingItemIndex].quantity = inputValue;
     } else {
       const existingItem = items.find((item) => item.id === product.id);
       if (existingItem) {
-        items = [...items, { ...product, quantity: 1, size: selectedSize }];
+        items = [
+          ...items,
+          { ...product, quantity: inputValue, size: selectedSize },
+        ];
       } else {
-        items = [...items, { ...product, quantity: 1, size: selectedSize }];
+        items = [
+          ...items,
+          { ...product, quantity: inputValue, size: selectedSize },
+        ];
       }
     }
     return items;
