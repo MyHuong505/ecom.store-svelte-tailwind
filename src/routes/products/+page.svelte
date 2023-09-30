@@ -27,11 +27,14 @@
     const res = await fetch('http://localhost:4000/categories');
     categories = await res.json();
   }
+
+  
+
 </script>
 
 <div class="my-8">
+  <SearchBar />
   <Filter {categories} {fetchProduct} />
-  <!-- <SearchBar /> -->
   <ProductCard {products} />
 </div>
 

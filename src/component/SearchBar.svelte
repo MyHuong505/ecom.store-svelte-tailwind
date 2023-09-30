@@ -1,17 +1,17 @@
 <script>
-  import { goto } from "$app/navigation";
 
-    let inputSearch = '';
-    function handleSearch() {
-        goto('/search/' + inputSearch);
-    }
 </script>
 
-<!-- <form class=""> -->
-    <!-- <label for="search-product">Search</label>
-    <input bind:value={inputSearch} name="search-product" type="text" />
-    <button>Search</button>
-</form>  -->
+<div class="flex items-center justify-center">
+  <input
+    type="text"
+    placeholder="Search..."
+    class="w-1/3 border rounded-l py-2 px-3 focus:outline-none border-primary"
 
-<input type="text" placeholder="Search..." bind:value={inputSearch} />
-<button on:click={handleSearch}>Search</button>
+  />
+  <button
+    class="border border-primary border-l-0 bg-primary text-white rounded-r py-2 px-4 hover:bg-primary-dark"
+  >
+    Search
+  </button>
+</div>
