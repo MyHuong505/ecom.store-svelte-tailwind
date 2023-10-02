@@ -7,21 +7,25 @@
 
   let products = [];
   let categories = [];
-  let searchTerm = ''; // Biến state để lưu giá trị tìm kiếm
+  let searchTerm = '';
 
   onMount(() => {
     fetchProduct();
     fetchCategory();
   });
 
-  async function fetchProduct(categoryId) {
+  async function fetchProduct(categoryId, searchTerm) {
     try {
       let url = 'http://localhost:4000/products';
       if (categoryId) {
         url += `?categoryId=${categoryId}`;
       }
       if (searchTerm) {
-        url += `&searchTerm=${searchTerm}`;
+        if (url.includes('?')) {
+          url += `&searchTerm=${searchTerm}`;
+        } else {
+          url += `?searchTerm=${searchTerm}`;
+        }
       }
       const response = await fetch(url);
       if (!response.ok) {
@@ -47,21 +51,17 @@
   }
 
   function handleSearch(event) {
-    searchTerm = event.detail; // Cập nhật giá trị tìm kiếm
+    searchTerm = event.detail; 
     fetchProduct(null, searchTerm);
   }
 </script>
 
 <div class="my-8">
-  <!-- SearchBar với sự kiện search -->
   <SearchBar on:search={handleSearch} />
 
-  <!-- Filter -->
   <Filter {categories} {fetchProduct} />
 
-  <!-- ProductCard -->
   <ProductCard {products} />
 </div>
 
-<!-- Footer -->
 <Footer />

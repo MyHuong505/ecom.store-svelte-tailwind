@@ -2,12 +2,10 @@
   import { createEventDispatcher } from 'svelte';
 
   let searchTerm = '';
-  let searchQuery = '';
 
   const dispatch = createEventDispatcher();
 
   function handleSearch() {
-    searchQuery = searchTerm; // Lưu giá trị tìm kiếm vào biến tính toán
     dispatch('search', searchTerm);
   }
 </script>
