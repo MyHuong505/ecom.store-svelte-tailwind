@@ -1,12 +1,13 @@
+<!-- SearchBar.svelte -->
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { goto } from '$app/navigation';
 
   let searchTerm = '';
 
-  const dispatch = createEventDispatcher();
-
   function handleSearch() {
-    dispatch('search', searchTerm);
+    if (searchTerm.trim() !== '') {
+      goto(`/search?term=${encodeURIComponent(searchTerm)}`);
+    }
   }
 </script>
 

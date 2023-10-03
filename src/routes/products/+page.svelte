@@ -6,59 +6,31 @@
   import { onMount } from 'svelte';
 
   let products = [];
-  let categories = [];
-  let searchTerm = '';
+  let categories = []
 
-  onMount(() => {
+  onMount(()=> {
     fetchProduct();
-    fetchCategory();
-  });
+    fetchCategory()
+  })
 
-  async function fetchProduct(categoryId, searchTerm) {
-    try {
-      let url = 'http://localhost:4000/products';
-      if (categoryId) {
-        url += `?categoryId=${categoryId}`;
-      }
-      if (searchTerm) {
-        if (url.includes('?')) {
-          url += `&searchTerm=${searchTerm}`;
-        } else {
-          url += `?searchTerm=${searchTerm}`;
-        }
-      }
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Lỗi khi tìm kiếm sản phẩm');
-      }
-      const data = await response.json();
-      products = data;
-    } catch (error) {
-      console.error('Lỗi khi tìm kiếm sản phẩm:', error);
-    }
+  async function fetchProduct(categoryId) {
+    let response 
+    if (categoryId) {
+      response = await fetch(`http://localhost:4000/products?categoryId=${categoryId}`);
+    } else {
+      response = await fetch('http://localhost:4000/products');
+    } 
+    products = await response.json();
   }
 
   async function fetchCategory() {
-    try {
-      const res = await fetch('http://localhost:4000/categories');
-      if (!res.ok) {
-        throw new Error('Lỗi khi tải danh mục');
-      }
-      categories = await res.json();
-    } catch (error) {
-      console.error('Lỗi khi tải danh mục:', error);
-    }
-  }
-
-  function handleSearch(event) {
-    searchTerm = event.detail; 
-    fetchProduct(null, searchTerm);
+    const res = await fetch('http://localhost:4000/categories');
+    categories = await res.json();
   }
 </script>
 
 <div class="my-8">
-  <SearchBar on:search={handleSearch} />
-
+  <SearchBar />
   <Filter {categories} {fetchProduct} />
 
   <ProductCard {products} />
