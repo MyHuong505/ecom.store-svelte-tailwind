@@ -184,6 +184,13 @@ let quantity = 1;
 
         <div class="py-2">
           <div class="flex flex-col">
+            <div class="mb-2 text-sm">Color: <span class="font-semibold text-stone-700"></span></div>
+            <div>
+
+              
+
+            </div>
+
             <div class="mb-2 text-sm">Size: <span class="font-semibold text-stone-700">{selectedSize}</span></div>
             <div>
 
