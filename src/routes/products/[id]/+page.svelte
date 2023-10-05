@@ -177,7 +177,7 @@ let quantity = 1;
 {:else}
 <div class="bg-white">
     <div class="max-w mx-auto p-4 flex justify-center">
-    <img src={product.thumbnailUrl} alt={product.title} />
+    <img class="max-w" src={product.thumbnailUrl} alt={product.title} />
       <div class="px-12">
         <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
         <p class="text-gray-600 text-primary">{product.price}</p>
@@ -185,11 +185,16 @@ let quantity = 1;
         <div class="py-2">
           <div class="flex flex-col">
             <div class="mb-2 text-sm">Color: <span class="font-semibold text-stone-700"></span></div>
-            <div>
-
-              
-
-            </div>
+            <section id="photos">
+              <div class="flex">
+                {#each product.relatedImages as image}
+                <div class="pr-3 mb-4">
+                  <img class="w-12 h-12 rounded object-cover cursor-pointer" src={image.imageUrl} alt={image.colorName} />
+                  <p class="text-stone-700 text-sm font-xs">{image.colorName}</p>
+                </div>
+                {/each}
+              </div>
+            </section>
 
             <div class="mb-2 text-sm">Size: <span class="font-semibold text-stone-700">{selectedSize}</span></div>
             <div>
@@ -289,8 +294,8 @@ let quantity = 1;
         <section id="photos">
           <p class="font-extrabold text-sm text-stone-700 py-2">Photos</p>
           <div class="flex flex-col justify-center items-center">
-            {#each relatedImages as imageUrl}
-            <img class="py-2" src={imageUrl} alt="Related Image" />
+            {#each product.relatedImages as image}
+              <img class="py-2" src={image.imageUrl} alt={image.colorName} />
             {/each}
           </div>
         </section>
