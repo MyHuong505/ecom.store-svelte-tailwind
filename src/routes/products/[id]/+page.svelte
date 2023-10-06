@@ -29,6 +29,9 @@ let isEditing = false;
 onMount(async () => {
   await fetchData();
   fetchCategory();
+  if (product.relatedImages.length > 0) {
+      selectedColor = product.relatedImages[0].colorName;
+    }
 });
 
 
@@ -56,8 +59,6 @@ await fetch(`http://localhost:4000/products/${data.id}`, {
 });
   location.reload();
 }
-
-
 
 async function deleteProduct(productId) {
   const response = await fetch(`http://localhost:4000/products/${productId}`, {
@@ -92,18 +93,18 @@ function setSelectedSize(size) {
 let showSizeError = false;
 
 function addToCartClicked() {
-    if (selectedSize) {
-      showSizeError = false; 
-      addToCartAndShowPopup(product, selectedSize, quantity);
-    } else {
-      showSizeError = true;
-    }
+  if (selectedSize) {
+    showSizeError = false; 
+    addToCartAndShowPopup(product, selectedSize, quantity, selectedColor);
+  } else {
+    showSizeError = true;
   }
+}
 
 let showPopup = false;
 
-async function addToCartAndShowPopup(product, selectedSize, inputValue) {
-  addToCart(product, selectedSize, inputValue); 
+async function addToCartAndShowPopup(product, selectedSize, inputValue, selectedColor) {
+  addToCart(product, selectedSize, inputValue, selectedColor); 
   showPopup = true;
   setTimeout(() => {
     showPopup = false;
@@ -128,27 +129,43 @@ $: {
 
 let quantity = 1;
 
-  function handleQuantityInput(event) {
-  let inputValue = parseInt(event.target.value);
+function handleQuantityInput(event) {
+let inputValue = parseInt(event.target.value);
 
-  if (isNaN(inputValue) || inputValue <= 0) {
+if (isNaN(inputValue) || inputValue <= 0) {
     quantity = 1;
   } else if (inputValue > 99) {
     quantity = 99;
   } else {
     quantity = inputValue;
-  }}
+}}
 
-  function decrementQuantity() {
-    if (quantity > 1) {
-      quantity--;
+function decrementQuantity() {
+  if (quantity > 1) {
+    quantity--;
+  }
+}
+
+function incrementQuantity() {
+  quantity++;
+}
+
+let selectedColor = '';
+
+function selectColor(color) {
+  selectedColor = color;
+}
+
+function getSelectedColorImage(selectedColor) {
+  if (selectedColor) {
+    for (const image of product.relatedImages) {
+      if (image.colorName === selectedColor) {
+        return image.imageUrl;
+      }
     }
   }
-
-  function incrementQuantity() {
-    quantity++;
-  }
-
+  return product.thumbnailUrl;
+}
 
 </script>
 
@@ -177,21 +194,25 @@ let quantity = 1;
 {:else}
 <div class="bg-white">
     <div class="max-w mx-auto p-4 flex justify-center">
-    <img class="max-w" src={product.thumbnailUrl} alt={product.title} />
+    <img class="max-w" src={getSelectedColorImage(selectedColor)} alt={product.title} />
       <div class="px-12">
         <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
         <p class="text-gray-600 text-primary">{product.price}</p>
 
         <div class="py-2">
           <div class="flex flex-col">
-            <div class="mb-2 text-sm">Color: <span class="font-semibold text-stone-700"></span></div>
+            <div class="mb-2 text-sm">Color: <span class="font-semibold text-stone-700">{selectedColor || "Select a color"}</span></div>
             <section id="photos">
               <div class="flex">
                 {#each product.relatedImages as image}
-                <div class="pr-3 mb-4">
-                  <img class="w-12 h-12 rounded object-cover cursor-pointer" src={image.imageUrl} alt={image.colorName} />
-                  <p class="text-stone-700 text-sm font-xs">{image.colorName}</p>
-                </div>
+                  <div class="pr-3 mb-4">
+                    <img
+                      class="w-12 h-12 rounded object-cover cursor-pointer {selectedColor === image.colorName ? 'border border-2 border-primary' : ''}"
+                      src={image.imageUrl}
+                      alt={image.colorName}
+                      on:click={() => selectColor(image.colorName)}
+                    />
+                  </div>
                 {/each}
               </div>
             </section>

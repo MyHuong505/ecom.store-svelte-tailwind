@@ -32,6 +32,7 @@ onMount(() => {
 
         <div class="flex">
           <div class="text-stone-700 text-sm font-thin ml-4 pt-1">Size: {item.size}</div>
+          <div class="text-stone-700 text-sm font-thin ml-4 pt-1">Color: {item.color}</div>
           <div class="text-sm text-stone-800 font-thin ml-auto pt-1">${item.price}</div>    
         </div>
 
