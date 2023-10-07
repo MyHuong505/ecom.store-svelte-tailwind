@@ -16,8 +16,7 @@ onMount(() => {
   const storedCart = localStorage.getItem('cart');
   cart.set(storedCart ? JSON.parse(storedCart) : []);
 });
-
-
+  
 
 </script>
 
