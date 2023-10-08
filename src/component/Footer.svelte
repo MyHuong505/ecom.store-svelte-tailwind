@@ -1,26 +1,26 @@
 <footer class="w-full bg-stone-200 bottom-0 left-0 flex justify-center items-center flex-col">
-    <div class="flex items-center justify-between w-4/6 mt-8 border-b border-gray-300 pb-8">
-        <div class=" flex flex-col items-center">
+    <div class="flex items-center justify-between mt-8 border-b border-gray-300 pb-8">
+        <div class="w-52 flex flex-col items-center">
             <i class="fas fa-gift text-2xl text-gray-600"></i>
             <p class="text-sm text-gray-700">Rich in Variety</p>
             <p class="text-gray-600 text-xs">1000+ New Items Everyday</p>
         </div>  
-        <div class=" flex flex-col items-center">
+        <div class="w-52 flex flex-col items-center">
             <i class="fas fa-industry text-2xl text-gray-600"></i>
             <p class="text-sm text-gray-700">Manufacturer Direct</p>
             <p class="text-gray-600 text-xs">Cut Out The Middleman</p>
         </div>
-        <div class=" flex flex-col items-center">
+        <div class="w-52 flex flex-col items-center">
             <i class="fas fa-shield-alt text-2xl text-gray-600"></i>
             <p class="text-sm text-gray-700">Safe & Trustworthy</p>
             <p class="text-gray-600 text-xs">Secure payment</p>
         </div>
-        <div class=" flex flex-col items-center">
+        <div class="w-52 flex flex-col items-center">
             <i class="fas fa-shipping-fast text-2xl text-gray-600"></i>
             <p class="text-sm text-gray-700">Fast Delivery</p>
             <p class="text-gray-600 text-xs">Global Partner of DHL</p>
         </div>
-        <div class=" flex flex-col items-center">
+        <div class="w-52 flex flex-col items-center">
             <i class="fas fa-smile text-2xl text-gray-600"></i>
             <p class="text-sm text-gray-700">Friendly Services</p>
             <p class="text-gray-600 text-xs">7-day Satisfaction Guarantee</p>
@@ -76,9 +76,9 @@
     </div>
     
 <div class="w-full py-8 flex items-center justify-center">
-    <div class="container w-4/6 flex justify-between grid grid-cols-5 mx-auto gap-4">
+    <div class="flex w-[1000px] justify-between gap-4">
 
-        <div class="col-span-1">
+        <div class="">
             <h2 class="text-sm text-gray-700">Company Info</h2>
             <ul class="text-gray-600 text-xs">
                 <li class="my-1">About</li>
@@ -89,7 +89,7 @@
             </ul>
         </div>
 
-        <div class="col-span-1">
+        <div class="">
             <h2 class="text-sm text-gray-700">Accessibility</h2>
             <ul class="text-gray-600 text-xs">
                 <li class="my-1">How to track</li>
@@ -97,7 +97,7 @@
             </ul>
         </div>
 
-        <div class="col-span-1">
+        <div class="">
             <h2 class="text-sm text-gray-700">Our Guarantee</h2>
             <ul class="text-gray-600 text-xs">
                 <li class="my-1">Company Policies</li>
@@ -109,7 +109,7 @@
             </ul>
         </div>
 
-        <div class="col-span-1">
+        <div class="">
             <h2 class="text-sm text-gray-700">All you need to know</h2>
             <ul class="text-gray-600 text-xs">
                 <li class="my-1">Payment & Methods</li>
@@ -118,7 +118,7 @@
             </ul>
         </div>
 
-        <div class="col-span-1">
+        <div class="">
             <h2 class="text-sm text-gray-700">Other Business</h2>
             <ul class="text-gray-600 text-xs">
                 <li class="my-1">Affiliate Program</li>
