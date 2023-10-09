@@ -172,7 +172,7 @@ function getSelectedColorImage(selectedColor) {
 {#if isEditing}
   <p class="flex justify-center m-8 font-semibold text-xl">Update product</p>
   <div class="flex m-8 flex-col items-center justify-center">
-    <div class="w-full max-w-md p-4 bg-gray-100">
+    <div class="w-full p-4 bg-gray-100">
       <input type="text" bind:value={product.title} class="w-full px-2 py-1 my-2 border border-gray-300 rounded" />
       <input type="text" bind:value={product.url} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
       <input type="text" bind:value={product.thumbnailUrl} class="w-full px-2 py-1 my-2 border border-gray-300 rounded"/>
@@ -228,6 +228,12 @@ function getSelectedColorImage(selectedColor) {
               >{size}
               </button>
             {/each}
+            
+            </div>
+              {#if showSizeError}
+                <p class="text-red-500">Please Select Size</p>
+              {/if}    
+            </div>
 
             <div class="flex items-center mt-6">
               <p>Quantity:</p>
@@ -244,13 +250,9 @@ function getSelectedColorImage(selectedColor) {
               </button>
             </div>
 
-            </div>
-              {#if showSizeError}
-                <p class="text-red-500">Please Select Size</p>
-              {/if}    
-            </div>
 
-          <button class="my-4 bg-primary text-white text-lg font-bold px-20 py-3 rounded text-sm hover:bg-secondary ml-auto"
+
+          <button class="my-4 w-72 bg-primary text-white text-lg font-bold px-20 py-3 rounded text-sm hover:bg-secondary ml-auto"
             on:click={addToCartClicked}
           >
             ADD TO CART
@@ -285,22 +287,22 @@ function getSelectedColorImage(selectedColor) {
 
 <div class="bg-gray-100">
   <div class="flex justify-center">
-    <div class="bg-white w-2/3 flex flex-col">
+    <div class="bg-white w-[1200px] flex flex-col">
 
       <div class="w-full bg-gray-100">
       <p class="py-2 px-4 "></p>
       </div>  
 
-      <div class=" flex flex-row w-1/2 justify-center items-center">
-        <div class="w-1/3 flex items-center">
+      <div class=" flex flex-row w-[650px] justify-center items-center">
+        <div class="w-[250px] flex items-center">
         <a href="#overview" on:click={() => goto('#overview')} 
           class="px-14 py-2 cursor-pointer bg-white text-primary border-bottom font-extrabold border-b-4 border-primary">Overview</a>
         </div>
-        <div class="w-1/3 flex  justify-center items-center">
+        <div class="w-[250px] flex  justify-center items-center">
           <a href="#photos" on:click={() => goto('#photos')} 
             class="text-md text-stone-700 w-1/3 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Photos</a>
         </div>
-        <div class="w-1/3 flex justify-center items-center">
+        <div class="w-[250px] flex justify-center items-center">
           <a href="#recommendations" on:click={() => goto('#recommendations')} 
             class="text-md text-stone-700 hover:text-primary hover:font-extrabold hover:scale-110 leading-none ">Recommendations</a>
         </div>

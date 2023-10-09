@@ -1,5 +1,5 @@
-<footer class="w-full bg-stone-200 bottom-0 left-0 flex justify-center items-center flex-col">
-    <div class="flex items-center justify-between mt-8 border-b border-gray-300 pb-8">
+<footer class="w-full bg-stone-200 right-0 flex justify-center items-center flex-col">
+    <div class="flex items-center justify-between mt-8 pb-8">
         <div class="w-52 flex flex-col items-center">
             <i class="fas fa-gift text-2xl text-gray-600"></i>
             <p class="text-sm text-gray-700">Rich in Variety</p>
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="flex justify-between w-4/6 mt-4 border-b border-gray-300 pb-8">
+    <div class="flex justify-between w-[1000px] mt-4 border-b border-gray-300 pb-8">
 
         <div class="flex flex-col">
             <p class="text-sm text-gray-700 my-2">Subscribe to Our Newsletter & Get Exclusive Offers</p>
@@ -62,11 +62,11 @@
         <p class="text-sm text-gray-700 my-2">Our Mobile Apps</p>
 
         <div class="flex gap-4">
-            <div class="bg-stone-800 flex items-center p-2 px-4 rounded">
+            <div class="bg-stone-800 w-32 flex items-center p-2 px-4 rounded">
                 <i class="fab fa-apple text-stone-200"></i>
                 <p class="text-stone-200 text-xs pl-2">Apple Store</p>
             </div>
-            <div class="bg-stone-800 flex items-center p-2 px-4 rounded">
+            <div class="bg-stone-800  w-32 flex items-center p-2 px-4 rounded">
                 <i class="fab fa-google-play text-stone-200"></i>
                 <p class="text-stone-200 text-xs pl-2">Google Play</p>
             </div>
@@ -75,7 +75,7 @@
     </div>    
     </div>
     
-<div class="w-full py-8 flex items-center justify-center">
+<div class="w-[1000px] py-8 flex items-center justify-center">
     <div class="flex w-[1000px] justify-between gap-4">
 
         <div class="">
@@ -131,7 +131,7 @@
 
 
     <div class="flex py-3 mb-8 w-full bg-stone-800 justify-center">
-        <div class="flex items-center justify-between w-4/6">
+        <div class="flex items-center justify-between w-[1000px]">
         <p class="text-stone-300 text-xs">@Copy right 2023</p>
         <ul class="flex gap-4">
             <li class="text-stone-300 text-xs">Country & Region: Singapore</li>
