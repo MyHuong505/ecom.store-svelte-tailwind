@@ -26,23 +26,27 @@ onMount(()=>{
     </div>
   </div>
 
-  <div class="mt-2 mx-4 md:mx-16 lg:mx-48">
-    <div class="flex justify-center mt-8 bg-white border p-2">
-        <h1 class="text-2xl font-semibold text-primary">New arrivals</h1>
-    </div>
-    <div class="bg-primary h-1 w-full"></div>
-    <div class="mb-8 mt-4">
-      <Carousel {products}/>
+  <div class="flex justify-center items-center">
+    <div class="mt-2 mx-4 w-[1000px]">
+      <div class="flex justify-center mt-8 bg-white border p-2">
+          <h1 class="text-2xl font-semibold text-primary">New arrivals</h1>
+      </div>
+      <div class="bg-primary h-1 w-full"></div>
+      <div class="mb-8 mt-4">
+        <Carousel {products}/>
+      </div>
     </div>
   </div>
 
-  <div class="mt-2 mx-4 md:mx-16 lg:mx-48">
+
+  <div class="flex justify-center items-center">
+      <div class="mt-2 mx-4 w-[1000px]">
     <div class="flex justify-center bg-white border p-2">
       <h1 class="text-2xl font-semibold text-primary">Recommendations for you</h1>
     </div>
     <div class="bg-primary h-1 w-full"></div>
 
-    <div class="mb-4 mt-4">
+    <div class="mb-4 mt-4 w-[1000px] flex justify-center items-center">
       <HomeProduct {products} />
     </div>
 
@@ -56,5 +60,7 @@ onMount(()=>{
     </div>
   </div>
 </div>
+  </div>
+
 
 <Footer/>

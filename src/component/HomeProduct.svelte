@@ -9,7 +9,7 @@
 
 </script>
 
-<div class="w-full">
+
     <div class="flex flex-wrap justify-center w-full bg-stone-100">
         {#each products as product}
             <div on:click={() => gotoPage(product)} class="w-48 bg-white m-1 cursor-pointer rounded" >
@@ -19,4 +19,4 @@
             </div>      
         {/each}
     </div>
-</div>
+
