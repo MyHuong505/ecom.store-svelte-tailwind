@@ -2,7 +2,6 @@
   import ProductCard from '../../component/ProductCard.svelte';
   import Filter from '../../component/Filter.svelte';
   import Footer from '../../component/Footer.svelte';
-  import SearchBar from '../../component/SearchBar.svelte';
   import { onMount } from 'svelte';
 
   let products = [];
@@ -27,10 +26,24 @@
     const res = await fetch('http://localhost:4000/categories');
     categories = await res.json();
   }
+  
 </script>
 
 <div class="my-8">
-  <SearchBar />
+
+<div class="flex items-center justify-center">
+    <input
+      type="text"
+      placeholder="Search..."
+      class="w-1/3 border rounded-l py-2 px-3 focus:outline-none border-primary"
+    />
+    <button
+      class="border border-primary border-l-0 bg-primary text-white rounded-r py-2 px-4 hover:bg-primary-dark"
+    >
+      Search
+    </button>
+  </div>
+
   <Filter {categories} {fetchProduct} />
 
   <ProductCard {products} />
