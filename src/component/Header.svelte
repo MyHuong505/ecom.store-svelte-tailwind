@@ -49,6 +49,7 @@
     remainingItems = remainingQuantities.reduce((sum, quantity) => sum + quantity, 0);
   }
 
+
   </script>
 
   <style>
@@ -62,7 +63,7 @@
     <nav class="">
       <ul class="flex gap-4 mx-16">
         <li><a href="/" class="{selectedPage === 'Home' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Home'}}>Home</a></li>
-        <li><a href="/products" class="{selectedPage === 'Product' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Product'}}>Product</a></li>
+        <li><a href="/products" class="{selectedPage === 'Product' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Product'}}>Products</a></li>
 		    <li><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
       </ul>
     </nav>
