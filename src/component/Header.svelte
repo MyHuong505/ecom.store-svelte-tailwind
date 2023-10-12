@@ -62,27 +62,27 @@
   <header class="w-full flex flex justify-between items-center py-6 px-8 text-white bg-primary">
     <nav class="">
       <ul class="flex gap-4 mx-16">
-        <li><a href="/" class="{selectedPage === 'Home' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Home'}}>Home</a></li>
-        <li><a href="/products" class="{selectedPage === 'Product' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Product'}}>Products</a></li>
-		    <li><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
+        <li class="w-12"><a href="/" class="{selectedPage === 'Home' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Home'}}>Home</a></li>
+        <li class="w-16"><a href="/products" class="{selectedPage === 'Product' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Product'}}>Products</a></li>
+		    <li class="w-32"><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
       </ul>
     </nav>
     
     <nav>
       <ul class="flex gap-4 mx-16">
           <div class="relative">
-            <button class="fa-solid fa-cart-shopping cursor-pointer"
+            <button class="fa-solid fa-cart-shopping cursor-pointer w-12"
               on:click={handleCartClick} 
               on:mouseenter={handleCartMouseEnter}
               on:mouseleave={handleCartMouseLeave}>
             </button>
-            <span class="absolute top-0 right-0 -mt-2 -mr-3 bg-red-500 rounded-full w-5 h-5 text-white text-xs flex items-center justify-center">
+            <span class="absolute top-0 right-0 -mt-2 bg-red-500 rounded-full w-5 h-5 text-white text-xs flex items-center justify-center">
               {totalItemsFromCart}
             </span>
           </div>    
-		    <li>Login</li>
-        <li>Contact us</li>
-        <li>Help</li>
+		    <li class="w-12">Login</li>
+        <li class="w-20">Contact us</li>
+        <li class="w-12">Help</li>
       </ul>
     </nav>
   </header>
