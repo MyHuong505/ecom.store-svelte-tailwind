@@ -90,7 +90,7 @@
 {#if isCartVisible}
   {#if $cart.length === 0}
   <div class="relative">
-    <div class="triangle absolute bottom-0 right-72 bg-white shadow-md"></div>
+    <div class="triangle absolute bottom-0 right-80 bg-white shadow-md"></div>
     <div class="fixed right-64 w-1/4 h-1/4 z-50 rounded grid bg-white drop-shadow-lg">
       <div class="flex flex-col items-center justify-center">
         <img class="w-1/4 my-4" src="http://doduae.com/image/shopping_cart.gif" alt="empty-shopping-cart" />
@@ -100,7 +100,7 @@
   </div>
 {:else}
   <div class="relative">
-    <div class="triangle absolute bottom-0 right-72 bg-white shadow-md"></div>
+    <div class="triangle absolute bottom-0 right-80 bg-white shadow-md"></div>
       <div class="fixed right-64 w-96 z-50 rounded grid bg-white drop-shadow-lg"
         on:mouseenter={handleCartMouseEnter}
         on:mouseleave={handleCartMouseLeave} 
