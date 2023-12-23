@@ -6,10 +6,11 @@ import {cart, calculateCartTotal} from "../../store/cartStore.js";
 
 
     const countries = [
-        { code: 'fra', countrycode: '+590',name: 'France', flag: 'https://tse3.explicit.bing.net/th?id=OIP.DdIdlrDrhxD2oTJbvd0TdgHaHv&pid=Api&P=0&h=220'},
-        { code: 'vie', countrycode: '+84' ,name: 'Vietnam', flag: 'https://www.pngkit.com/png/detail/382-3826500_vietnam-flag-circle-icon-vietnam-flag-flags-of.png'},
-        { code: 'usa', countrycode: '+00',name: 'United States', flag: 'https://cdn3.iconfinder.com/data/icons/flags-of-countries-3/128/USA-1024.png' },
+        { code: 'fra', countrycode: '+590',name: 'France', flag: 'https://tse3.explicit.bing.net/th?id=OIP.DdIdlrDrhxD2oTJbvd0TdgHaHv&pid=Api&P=0&h=220', cities: ['Paris', 'Versail']},
+        { code: 'vie', countrycode: '+84' ,name: 'Vietnam', flag: 'https://www.pngkit.com/png/detail/382-3826500_vietnam-flag-circle-icon-vietnam-flag-flags-of.png', cities: ['Hanoi', 'HCMC']},
+        { code: 'usa', countrycode: '+00',name: 'United States', flag: 'https://cdn3.iconfinder.com/data/icons/flags-of-countries-3/128/USA-1024.png', cities: ['NY', 'LA'] },
     ];
+
 
 
 let userData = {
@@ -18,29 +19,29 @@ let userData = {
     address: "",
     address2: "",
     state: "",
-    city: "",
     zip: "",
     countrycode: "",
     phoneNum: "",
     selectedCountry: countries[0],
+    selectedCity: null,
 };
 
 
 
 
-let showSelect = false;
-let isSubmitted = true;
+let showSelectedCountry = false;
+let isClickedSave = false;
 let defaultMode = true;
-
+let showSelectedCity = false;
 
 function handleSubmit() {
-    if (!userData.firstName || !userData.lastName || !userData.address || !userData.city || !userData.zip || !userData.phoneNum || !userData.selectedCountry) {
-        isSubmitted = false;
-    } else {
-        isSubmitted = true;
-        saveUserDataToLocalStorage();
-        defaultMode = false;
-    }
+    isClickedSave = true;
+    if (!userData.firstName || !userData.lastName || !userData.address || !userData.selectedCity || !userData.zip || !userData.phoneNum || !userData.selectedCountry
+    || userData.firstName.length > 20 || userData.lastName.length >20) {
+        return
+    } 
+    saveUserDataToLocalStorage();
+        defaultMode = false
 }
 
 
@@ -62,7 +63,7 @@ function handleSearchKeydown(event) {
     if (filteredCountries.length > 0) {
       userData.selectedCountry = filteredCountries[0];
       search = userData.selectedCountry.name;
-      showSelect = false;
+      showSelectedCountry = false;
     }
   }
 }
@@ -71,22 +72,24 @@ function handleSearchKeydown(event) {
 function handleCountryChange(countryCode) {
     userData.selectedCountry = countries.find(country => country.code === countryCode);
     search = userData.selectedCountry.name;
-    showSelect = false;
+    showSelectedCountry = false;
     userData.countrycode = userData.selectedCountry.countrycode;
+    userData.selectedCity = null;
 
     editedUser.selectedCountry = userData.selectedCountry;
     editedUser.countrycode = userData.countrycode;
 }
 
 
-function handleSearchFocus() {
-    showSelect = !showSelect;
+function handleSearchCountry() {
+    showSelectedCountry = !showSelectedCountry;
     showClearButton = true;
 }
 
+
 function handleSearchBlur() {
     afterUpdate(() => {
-      if (!showSelect && filteredCountries.length > 0) {
+      if (!showSelectedCountry && filteredCountries.length > 0) {
         userData.selectedCountry = filteredCountries[0];
         search = userData.selectedCountry.name;
     }
@@ -221,39 +224,47 @@ function confirmCheckout() {
 
 </script>
 
-
 <div class="bg-gray-100 w-full h-full flex flex-row justify-center">
     <div class="flex flex-col w-3/6">
+    {JSON.stringify(userData)}
     {#if defaultMode}
         <div class=" bg-white overflow-auto my-4 rounded">
         <div class="text-stone-700 mx-4 my-2 pb-2 pt-4 text-md font-extrabold">Shipping Address</div>
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*First Name</span>
-                <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {!isSubmitted && !userData.firstName ? 'border-red-500' : ''}" 
+                <input type="text" class="mx-4 rounded py-2 pl-1 border outline-none focus-within:border-blue-500 {isClickedSave && !userData.firstName ? 'border-red-500' : ''}" 
                     bind:value={userData.firstName}
+                    maxlength="20"
                 />
-                {#if !isSubmitted && !userData.firstName}
+                {#if isClickedSave && !userData.firstName}
                     <p class="text-red-500 text-xs mx-4">Please enter your first name.</p>
+                {/if}
+                {#if isClickedSave && userData.firstName.length > 20}
+                    <p class="text-red-500 text-xs mx-4">Please enter your first name less 20 characters</p>
                 {/if}
             </div>
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1" >*Last Name</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.lastName ? 'border-red-500' : ''}" 
-                bind:value={userData.lastName} 
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isClickedSave && !userData.lastName ? 'border-red-500' : ''}" 
+                bind:value={userData.lastName}
                 />
-                {#if !isSubmitted && !userData.lastName}
+                {#if isClickedSave && !userData.lastName}
                     <p class="text-red-500 text-xs mx-4">Please enter your last name.</p>
+                {/if}
+                {#if isClickedSave && userData.lastName.length >20}
+                    <p class="text-red-500 text-xs mx-4">Please enter your last name less than 20</p>
                 {/if}
             </div>
         </div>
         <div class="flex flex-row my-4 mb-8">
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*Address line 1</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.address ? 'border-red-500' : ''}" 
+                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isClickedSave && !userData.address ? 'border-red-500' : ''}" 
                 bind:value={userData.address}
+                maxlength="200"
                 />
-                {#if !isSubmitted && !userData.address}
+                {#if isClickedSave && !userData.address}
                     <p class="text-red-500 text-xs mx-4 ">Please enter your address.</p>
                 {/if}
             </div>
@@ -261,6 +272,7 @@ function confirmCheckout() {
                 <span class="text-stone-500 text-xs mx-4 mb-1">Address line 2 (optional)</span>
                 <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500"  
                 bind:value={userData.address2}
+                maxlength="200"
                 />
             </div>
         </div>
@@ -270,7 +282,7 @@ function confirmCheckout() {
             <div class="relative mx-4">
         <button
             class="flex items-center w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500 bg-white"
-            on:click={handleSearchFocus}>
+            on:click={handleSearchCountry}>
             {#if userData.selectedCountry}
                 <img src={userData.selectedCountry.flag} alt={userData.selectedCountry.name} class="w-4 h-3 mr-2" />
                 {userData.selectedCountry.name}
@@ -278,14 +290,14 @@ function confirmCheckout() {
                 Select a country
             {/if}
             <span class="ml-auto">
-                {#if showSelect}
+                {#if showSelectedCountry}
                     <i class="fas fa-chevron-up ml-2"></i>
                 {:else}
                     <i class="fas fa-chevron-down ml-2"></i>
                 {/if}
             </span>
         </button>
-        {#if showSelect}
+        {#if showSelectedCountry}
             <div class="absolute z-10 w-full bg-white border rounded shadow-lg">
                 <input
                     type="text"
@@ -322,33 +334,35 @@ function confirmCheckout() {
             </div>
             <div class="flex flex-col w-1/3">
                 <span class="text-stone-500 text-xs mx-4 mb-1">*City</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.city ? 'border-red-500' : ''}" 
-                bind:value={userData.city}
-                />
-                {#if !isSubmitted && !userData.city}
-                    <p class="text-red-500 text-xs mx-4">Please enter your city.</p>
+                <select class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500" bind:value={userData.selectedCity}>
+                    {#each userData.selectedCountry.cities as city}
+                        <option value={city}>{city}</option>
+                    {/each}
+                </select>
+                {#if isClickedSave && !userData.selectedCity}
+                    <p class="text-red-500 text-xs mx-4">Please select your city.</p>
                 {/if}
+            </div>  
             </div>
-        </div>
-        <div class="flex flex-row my-4 mb-8">
-            <div class="flex flex-col w-1/2">
-                <span class="text-stone-500 text-xs mx-4 mb-1">*Zip/Postal Code</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {!isSubmitted && !userData.zip ? 'border-red-500' : ''}" 
-                bind:value={userData.zip}
-                />
-                {#if !isSubmitted && !userData.zip}
+            <div class="flex flex-row my-4 mb-8">
+                <div class="flex flex-col w-1/2">
+                    <span class="text-stone-500 text-xs mx-4 mb-1">*Zip/Postal Code</span>
+                    <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 {isClickedSave && !userData.zip ? 'border-red-500' : ''}" 
+                    bind:value={userData.zip}
+                    />
+                {#if isClickedSave && !userData.zip}
                     <p class="text-red-500 text-xs mx-4">Please enter your zip/postal code.</p>
                 {/if}
             </div>
             <div class="flex flex-col w-1/2">
                 <span class="text-stone-500 text-xs mb-1 ml-4">*Phone Number</span>
                 <div class="flex items-center ml-4 mr-4">
-                    <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {!isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}">{userData.countrycode}</span>
-                    <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {!isSubmitted && !userData.phoneNum ? 'border-red-500' : ''}" 
+                    <span class="text-gray-500 border py-2 px-2 rounded-l border-r-0 {isClickedSave && !userData.phoneNum ? 'border-red-500' : ''}">{userData.countrycode}</span>
+                    <input type="tel" class="grow py-2 pl-1 border rounded-r outline-none focus-within:border-blue-500 {isClickedSave && !userData.phoneNum ? 'border-red-500' : ''}" 
                     bind:value={userData.phoneNum}
                     />
                 </div>
-                {#if !isSubmitted && !userData.phoneNum}
+                {#if isClickedSave && !userData.phoneNum}
                     <p class="text-red-500 text-xs mx-4 ">Please enter your phone number.</p>
                 {/if}
                 </div>
@@ -357,7 +371,6 @@ function confirmCheckout() {
         <div class="flex items-center justify-center">
             <button class="w-1/5 bg-primary text-white py-2 rounded text-sm hover:bg-secondary mb-8" on:click={() => {
                 handleSubmit();
-                saveUserDataToLocalStorage();
             }}>
                 Save
             </button>
@@ -422,7 +435,7 @@ function confirmCheckout() {
             <div class="relative mx-4">
         <button
             class="flex items-center w-full px-4 py-2 border rounded outline-none focus-within:border-blue-500 bg-white"
-            on:click={handleSearchFocus}>
+            on:click={Country}>
             {#if editedUser.selectedCountry}
                 <img src={editedUser.selectedCountry.flag} alt={editedUser.selectedCountry.name} class="w-4 h-3 mr-2" />
                 {editedUser.selectedCountry.name}
@@ -430,14 +443,14 @@ function confirmCheckout() {
                 Select a country
             {/if}
             <span class="ml-auto">
-                {#if showSelect}
+                {#if showSelectedCountry}
                     <i class="fas fa-chevron-up ml-2"></i>
                 {:else}
                     <i class="fas fa-chevron-down ml-2"></i>
                 {/if}
             </span>
         </button>
-        {#if showSelect}
+        {#if showSelectedCountry}
             <div class="absolute z-10 w-full bg-white border rounded shadow-lg">
                 <input
                     type="text"
@@ -473,10 +486,10 @@ function confirmCheckout() {
                 />
             </div>
             <div class="flex flex-col w-1/3">
-                <span class="text-stone-500 text-xs mx-4 mb-1">*City</span>
-                <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 " 
+                <span class="text-stone-500 text-xs mx-4 mb-1">*City222</span>
+                <!-- <input type="text" class="mx-4 border rounded py-2 pl-1 outline-none focus-within:border-blue-500 " 
                 bind:value={editedUser.city}
-                />
+                /> -->
             </div>
         </div>
         <div class="flex flex-row my-4 mb-8">
