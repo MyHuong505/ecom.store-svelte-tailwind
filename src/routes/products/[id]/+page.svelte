@@ -233,7 +233,7 @@ function getSelectedColorImage(selectedColor) {
     <img class="max-w" src={getSelectedColorImage(selectedColor)} alt={product.title} />
       <div class="px-12">
         <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
-        <p class="text-gray-600 text-primary">{product.price}</p>
+        <p class="text-gray-600 text-primary">${product.price}</p>
 
         <div class="py-2">
           <div class="flex flex-col">

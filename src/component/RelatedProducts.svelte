@@ -18,7 +18,7 @@ export let relatedProducts = [];
             <div class="bg-white p-2 cursor-pointer">
               <img src={relatedProduct.thumbnailUrl} alt={relatedProduct.title} class="w-full mb-2" />
               <h3 class="text-stone-700 text-sm font-semibold">{relatedProduct.title}</h3>
-              <p class="text-md text-primary text-gray-600">{relatedProduct.price}</p>
+              <p class="text-md text-primary text-gray-600">${relatedProduct.price}</p>
             </div>
           </div>
         {/each}

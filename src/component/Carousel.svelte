@@ -53,7 +53,7 @@
       >
         <img src={product.thumbnailUrl} alt={product.title} class="w-full mb-2" />
         <h3 class="text-stone-700 text-sm font-semibold">{product.title}</h3>
-        <p class="text-md text-primary text-gray-600">{product.price}</p>
+        <p class="text-md text-primary text-gray-600">${product.price}</p>
       </div>
     {/each}
     {#each products as product, index (product.id)}
@@ -65,7 +65,7 @@
         <img src={product.thumbnailUrl} alt={product.title} class="w-full mb-2" />
         <h3 class="text-stone-700 text-sm font-semibold">{product.title}</h3>
         <div class="flex justify-end">
-          <p class="text-md text-primary text-gray-600 absolute bottom-0 right-0">{product.price}</p>
+          <p class="text-md text-primary text-gray-600 absolute bottom-0 right-0">${product.price}</p>
         </div>
       </div>
     {/each}

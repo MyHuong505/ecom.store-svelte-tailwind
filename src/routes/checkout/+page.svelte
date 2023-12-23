@@ -530,7 +530,7 @@ function confirmCheckout() {
                 <div class="ml-2 text-stone-700">
                     3 - 7 Business days shipping time
                     <p class="text-sm text-stone-500 pt-1">
-                        US $17.15
+                        USD $17.15
                     </p>
                 </div>
             </label>
@@ -548,7 +548,7 @@ function confirmCheckout() {
                 <div class="ml-2 text-stone-700">
                     10 - 15 Business days shipping time
                     <p class="text-sm text-stone-500 pt-1">
-                        US $10.96
+                        USD $10.96
                     </p>
                 </div>
             </label>
@@ -586,17 +586,17 @@ function confirmCheckout() {
         </p>
         <p class="py-1 px-4 text-stone-700 text-sm text-left">Sub Total:
             <span class="float-right">
-                US ${totalPrice.toFixed(2)}
+                USD ${totalPrice.toFixed(2)}
             </span> 
         </p>
         <p class="py-1 px-4 text-stone-700 text-sm text-left">Shipping Charge:
             <span class="float-right">
-                US ${shippingPrice.toFixed(2)}
+                USD ${shippingPrice.toFixed(2)}
             </span> 
         </p>
 
         <p class="text-stone-700 text-lg font-bold px-4 my-4 text-left flex justify-between items-center">
-            Grand Total: <span class="text-stone-700 float-right text-lg">US ${(totalPrice + shippingPrice).toFixed(2)}</span>
+            Grand Total: <span class="text-stone-700 float-right text-lg">USD ${(totalPrice + shippingPrice).toFixed(2)}</span>
         </p>
         
         <div class="mx-4 my-4">
