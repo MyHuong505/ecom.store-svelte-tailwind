@@ -16,15 +16,16 @@
   async function fetchProduct(categoryId) {
     let response 
     if (categoryId) {
-      response = await fetch(`http://localhost:4000/products?categoryId=${categoryId}`);
+      response = await fetch('/api/products');
+      products = await response.json().then(json => json.filter(item => item.categoryId === categoryId))
     } else {
-      response = await fetch('http://localhost:4000/products');
+      response = await fetch('/api/products');
+      products = await response.json();
     } 
-    products = await response.json();
   }
 
   async function fetchCategory() {
-    const res = await fetch('http://localhost:4000/categories');
+    const res = await fetch('/api/categories');
     categories = await res.json();
   }
 

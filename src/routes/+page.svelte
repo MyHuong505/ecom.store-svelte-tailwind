@@ -8,7 +8,7 @@ import Carousel from '../component/Carousel.svelte';
 let products = [];
 
 async function fetchItem() {
-    const res = await fetch('http://localhost:4000/products');
+    const res = await fetch('/api/products');
     const list = await res.json();
     products = list.slice(0,20);
 }

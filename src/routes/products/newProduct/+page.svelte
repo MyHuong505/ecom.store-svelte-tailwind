@@ -10,7 +10,7 @@ let newProduct = {
 
 
 async function createProduct(){
-    await fetch('http://localhost:4000/products',{
+    await fetch('/api/products',{
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -21,7 +21,7 @@ async function createProduct(){
 }
 
   async function fetchCategory() {
-    const res = await fetch('http://localhost:4000/categories');
+    const res = await fetch('/api/categories');
     categories = await res.json();
     // console.log(categories);
   }

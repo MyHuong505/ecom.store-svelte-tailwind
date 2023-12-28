@@ -36,14 +36,14 @@ onMount(async () => {
 
 
  async function fetchData(){
-  let res = await fetch(`http://localhost:4000/products/${data.id}`);
-  product = await res.json();
+  let json = await fetch('/api/products').then(res => res.json());
+  product = json.find(item => item.id === +data.id);
   await fetchRelatedProducts();
   // console.log(product);
  }
 
 async function fetchCategory(){
- const res = await fetch('http://localhost:4000/categories');
+ const res = await fetch('/api/categories');
  categories = await res.json();
  // console.log(categories);
 }
@@ -61,10 +61,10 @@ await fetch(`http://localhost:4000/products/${data.id}`, {
 }
 
 async function deleteProduct(productId) {
-  const response = await fetch(`http://localhost:4000/products/${productId}`, {
+  const response = await fetch('/api/products/', {
     method: 'DELETE',
   });
-  await response.json();
+  await response.json().filter(item => item.id === productId);
   await fetchData();
 }
 
@@ -114,9 +114,9 @@ async function addToCartAndShowPopup(product, selectedSize, inputValue, selected
 let relatedProducts = [];
 
 async function fetchRelatedProducts() {
-  if (product.categoryId) {
-    const res = await fetch(`http://localhost:4000/products?categoryId=${product.categoryId}`);
-    relatedProducts = await res.json();
+  if (product.categoryId) { 
+    const response = await fetch('/api/products');
+    relatedProducts = await response.json().then(json => json.filter(item => item.categoryId === product.categoryId))
     relatedProducts = relatedProducts.filter(item => item.id !== product.id); 
   }
 }
