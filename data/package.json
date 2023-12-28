@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "json-server --watch jsonServer.json --port 4000",
+    "production": "json-server --watch jsonServer.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
