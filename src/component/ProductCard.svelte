@@ -8,7 +8,7 @@ function gotoPage(product) {
 </script>
 
 <div class="flex justify-center">
-  <div class="grid grid-cols-4 gap-4 mx-24 cursor-pointer my-8">
+  <div class="flex flex-wrap justify-center mx-24 cursor-pointer my-8">
     {#each products as product}
       <div on:click={() => gotoPage(product)} class="w-72 flex flex-col bg-white border p-4 rounded shadow hover:shadow-md">
         <img class="w-96" src={product.thumbnailUrl} alt={product.title} /> 
