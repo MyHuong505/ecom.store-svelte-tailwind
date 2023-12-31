@@ -60,16 +60,17 @@
   }
 </style>
   <header class="w-full flex flex justify-between items-center py-6 px-8 text-white bg-primary">
+    
     <nav class="">
-      <ul class="flex gap-4 mx-16">
-        <li class="w-12"><a href="/" class="{selectedPage === 'Home' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Home'}}>Home</a></li>
-        <li class="w-16"><a href="/products" class="{selectedPage === 'Product' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Product'}}>Products</a></li>
-		    <li class="w-32"><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
+      <ul class="flex space-x-4">
+        <li class="w-12"><a href="/" class="fa-solid fa-home" /></li>
+        <li class="w-16 hidden md:block"><a href="/products" class="{selectedPage === 'Product' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Product'}}>Products</a></li>
+		    <li class="w-24 hidden md:block"><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
       </ul>
     </nav>
     
     <nav>
-      <ul class="flex gap-4 mx-16">
+      <ul class="flex">
           <div class="relative">
             <button class="fa-solid fa-cart-shopping cursor-pointer w-12"
               on:click={handleCartClick} 
