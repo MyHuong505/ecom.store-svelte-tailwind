@@ -81,7 +81,7 @@
             </span>
           </div>    
 		    <li class="w-12">Login</li>
-        <li class="w-20">Contact us</li>
+        <li class="w-24">Contact us</li>
         <li class="w-12">Help</li>
       </ul>
     </nav>
