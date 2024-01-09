@@ -1,7 +1,14 @@
 <script>
 import Carousel from 'svelte-carousel'
 import "resize-observer-polyfill";  
+import { onMount, onDestroy } from 'svelte';
 export let relatedProducts = [];
+  let carouselSize = 5
+  onMount(() => {
+    if (window.innerWidth < 768) {
+      carouselSize = 1
+    } 
+  });
 
   function gotoPage(relatedProduct) {
      window.location.href = `/products/${relatedProduct.id}`;;
@@ -12,7 +19,7 @@ export let relatedProducts = [];
   <div class="p-4 w-full border rounded">
     <p class="text-stone-700 pb-2 text-md font-extrabold mx-8">You May Also Like</p>
     {#if relatedProducts.length > 0}
-      <Carousel particlesToShow={5} particlesToScroll={5}>
+      <Carousel particlesToShow={carouselSize} particlesToScroll={carouselSize}>
         {#each relatedProducts as relatedProduct (relatedProduct.id)}
           <div on:click={() => gotoPage(relatedProduct)}>
             <div class="bg-white p-2 cursor-pointer">
