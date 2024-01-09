@@ -238,7 +238,7 @@ function getSelectedColorImage(selectedColor) {
         <div class="py-2">
           <div class="flex flex-col">
             <div class="mb-2 text-sm">Color: <span class="font-semibold text-stone-700">{selectedColor || "Select a color"}</span></div>
-            <section id="photos">
+            <section>
               <div class="flex">
                 {#each product.relatedImages as image}
                   <div class="pr-3 mb-4">
