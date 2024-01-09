@@ -382,7 +382,8 @@ function getSelectedColorImage(selectedColor) {
   </div>
 {/if}
 
-
-<NavBar />
+<div class="hidden md:block">
+  <NavBar />
+</div>
 
 <Footer />
