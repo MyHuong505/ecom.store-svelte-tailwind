@@ -9,7 +9,7 @@ export let relatedProducts = [];
 </script>
 
 <div class="flex justify-center items-center m-4">
-  <div class="p-4 w-[1200px] border rounded">
+  <div class="p-4 w-full border rounded">
     <p class="text-stone-700 pb-2 text-md font-extrabold mx-8">You May Also Like</p>
     {#if relatedProducts.length > 0}
       <Carousel particlesToShow={5} particlesToScroll={5}>

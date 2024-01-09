@@ -229,8 +229,8 @@ function getSelectedColorImage(selectedColor) {
   </div>
 {:else}
 <div class="bg-white">
-    <div class="max-w mx-auto p-4 flex justify-center">
-    <img class="max-w" src={getSelectedColorImage(selectedColor)} alt={product.title} />
+    <div class="max-w mx-auto p-4 flex justify-center flex-wrap">
+      <img class="max-w" src={getSelectedColorImage(selectedColor)} alt={product.title} />
       <div class="px-12">
         <h3 class="text-xl text-stone-700 font-semibold mb-2">{product.title}</h3>
         <p class="text-gray-600 text-primary">${product.price}</p>
@@ -323,13 +323,13 @@ function getSelectedColorImage(selectedColor) {
 
 <div class="bg-gray-100">
   <div class="flex justify-center">
-    <div class="bg-white w-[1200px] flex flex-col">
+    <div class="bg-white flex flex-col">
 
       <div class="w-full bg-gray-100">
       <p class="py-2 px-4 "></p>
       </div>  
 
-      <div class=" flex flex-row w-[650px] justify-center items-center">
+      <div class="flex-row w-[650px] justify-center items-center hidden md:flex">
         <div class="w-[250px] flex items-center">
         <a href="#overview" on:click={() => goto('#overview')} 
           class="px-14 py-2 cursor-pointer bg-white text-primary border-bottom font-extrabold border-b-4 border-primary">Overview</a>
