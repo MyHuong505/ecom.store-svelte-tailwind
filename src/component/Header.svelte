@@ -65,7 +65,7 @@
       <ul class="flex space-x-4">
         <li class="w-12"><a href="/" class="fa-solid fa-home" /></li>
         <li class="w-16 hidden md:block"><a href="/products" class="{selectedPage === 'Product' ? 'underline' : ''}" on:click={()=>{selectedPage = 'Product'}}>Products</a></li>
-		    <li class="w-24 hidden md:block"><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
+		    <li class="w-32 hidden md:block"><a href="/products/newProduct" class={selectedPage === 'New Product' ? 'underline' : ''} on:click={()=>{selectedPage = 'New Product'}}>New Product</a></li>
       </ul>
     </nav>
     
