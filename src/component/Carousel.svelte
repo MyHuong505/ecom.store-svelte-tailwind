@@ -1,73 +1,47 @@
 <script>
-  import { onMount } from 'svelte';    
-  import { goto } from "$app/navigation";
-  
-  
-  function gotoPage(product) {
-    goto('/products/' + product.id);
-  }
-
-  export let products;
-  
-  let currentSlide = 0;
-  let itemWidth = 0;
-  let containerWidth = 0;
-  let totalWidth = 0;
-  
-  const nextSlide = () => {
-    if (currentSlide < products.length - 1) {
-      currentSlide += 1;
-    } else {
-      currentSlide = 0;
-    }
-  };
-  
+import Carousel from 'svelte-carousel'
+import "resize-observer-polyfill";  
+import { onMount, onDestroy } from 'svelte';
+export let products = [];
+  let carouselSize = 5
   onMount(() => {
-    const container = document.getElementById('carousel-container');
-    containerWidth = container.offsetWidth;
-    itemWidth = containerWidth / 5; 
-    totalWidth = products.length * (itemWidth + 4); 
-    const intervalId = setInterval(nextSlide, 3000);
-    window.addEventListener('resize', handleResize);
-    return () => clearInterval(intervalId);
-  });   
-  
-  function handleResize() {
-    const container = document.getElementById('carousel-container');
-    containerWidth = container.offsetWidth;
-    itemWidth = containerWidth / 5;
-    totalWidth = products.length * (itemWidth + 4); 
-  }
+    if (window.innerWidth < 768) {
+      carouselSize = 1
+    } 
+  });
+
+  function gotoPage(product) {
+     window.location.href = `/products/${product.id}`;;
+  }  
 </script>
 
-<div id="carousel-container" class="relative overflow-hidden">
-  <div
-    class="flex transition-transform duration-300"
-    style="transform: translateX(-{currentSlide * (itemWidth + 4)}px)"
-  >
-    {#each products as product, index (product.id)}
-      <div
-        on:click={() => gotoPage(product)}
-        class="bg-white border rounded p-4 mx-1 shadow hover:shadow-md cursor-pointer"
-        style="width: {itemWidth}px; min-width: {itemWidth}px;"
+<div class="flex justify-center items-center m-4">
+  <div class="p-4 w-full border rounded">
+    {#if products.length > 0}
+      <Carousel 
+        autoplay
+        autoplayDuration={2000}
+        particlesToShow={carouselSize} 
+        particlesToScroll={carouselSize}
+        dots={false}
       >
-        <img src={product.thumbnailUrl} alt={product.title} class="w-full mb-2" />
-        <h3 class="text-stone-700 text-sm font-semibold">{product.title}</h3>
-        <p class="text-md text-primary text-gray-600">${product.price}</p>
-      </div>
-    {/each}
-    {#each products as product, index (product.id)}
-      <div
-        on:click={() => gotoPage(product)}
-        class="bg-white border rounded p-4 shadow hover:shadow-md cursor-pointer"
-        style="width: {itemWidth}px; min-width: {itemWidth}px;"
-      >
-        <img src={product.thumbnailUrl} alt={product.title} class="w-full mb-2" />
-        <h3 class="text-stone-700 text-sm font-semibold">{product.title}</h3>
-        <div class="flex justify-end">
-          <p class="text-md text-primary text-gray-600 absolute bottom-0 right-0">${product.price}</p>
-        </div>
-      </div>
-    {/each}
+        {#each products as product (product.id)}
+          <div on:click={() => gotoPage(product)}>
+            <div class="bg-white p-2 cursor-pointer">
+              <img src={product.thumbnailUrl} alt={product.title} class="w-full mb-2" />
+              <h3 class="text-stone-700 text-sm font-semibold">{product.title}</h3>
+              <p class="text-md text-primary text-gray-600">${product.price}</p>
+            </div>
+          </div>
+        {/each}
+      </Carousel>
+    {/if}
   </div>
 </div>
+
+
+
+
+
+
+

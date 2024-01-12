@@ -20,7 +20,7 @@ let showNavbar = false;
 onMount(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      showNavbar = scrollPosition >= 1300;
+      showNavbar = scrollPosition >= 1500;
 
       const overviewSection = document.getElementById('overview');
       const photosSection = document.getElementById('photos');
