@@ -5,6 +5,7 @@
   import { onMount } from 'svelte';
 
   let products = [];
+  let filteredProducts = [];
   let categories = [];
   let searchKey ='';
 
@@ -15,12 +16,12 @@
 
   async function fetchProduct(categoryId) {
     let response 
+    response = await fetch('/api/products');
+    products = await response.json();
     if (categoryId) {
-      response = await fetch('/api/products');
-      products = await response.json().then(json => json.filter(item => item.categoryId === categoryId))
+      filteredProducts = products.filter(item => item.categoryId === categoryId)
     } else {
-      response = await fetch('/api/products');
-      products = await response.json();
+      filteredProducts = products;
     } 
   }
 
@@ -31,10 +32,9 @@
 
 async function searchProducts() {
   const trimmedSearchKey = searchKey.trim();
-  const filteredProducts = products.filter((product) => {
+  filteredProducts = products.filter((product) => {
       return product.title.toLowerCase().includes(trimmedSearchKey.toLowerCase());
   });
-  products = filteredProducts;
 }
 
 
@@ -63,7 +63,7 @@ async function searchProducts() {
 
   <Filter {categories} {fetchProduct} />
 
-  <ProductCard {products} />
+  <ProductCard products={filteredProducts} />
 </div>
 
 <Footer />

@@ -71,7 +71,7 @@
     
     <nav>
       <ul class="flex">
-        <div class="relative">
+        <div class="relative mr-6">
           <button class="fa-solid fa-cart-shopping cursor-pointer w-16"
           on:click={handleCartClick} 
           on:mouseenter={handleCartMouseEnter}
