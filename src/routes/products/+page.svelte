@@ -2,12 +2,14 @@
   import ProductCard from '../../component/ProductCard.svelte';
   import Filter from '../../component/Filter.svelte';
   import Footer from '../../component/Footer.svelte';
+
   import { onMount } from 'svelte';
 
   let products = [];
   let filteredProducts = [];
   let categories = [];
   let searchKey ='';
+  let selectedCategory = null;
 
   onMount(()=> {
     fetchProduct();
@@ -18,11 +20,7 @@
     let response 
     response = await fetch('/api/products');
     products = await response.json();
-    if (categoryId) {
-      filteredProducts = products.filter(item => item.categoryId === categoryId)
-    } else {
-      filteredProducts = products;
-    } 
+    filteredProducts = products;
   }
 
   async function fetchCategory() {
@@ -30,14 +28,25 @@
     categories = await res.json();
   }
 
-async function searchProducts() {
-  const trimmedSearchKey = searchKey.trim();
-  filteredProducts = products.filter((product) => {
-      return product.title.toLowerCase().includes(trimmedSearchKey.toLowerCase());
-  });
+  async function searchProducts() {
+    const trimmedSearchKey = searchKey.trim();
+    filteredProducts = products;
+
+    if (trimmedSearchKey) {
+      filteredProducts = filteredProducts.filter((product) => {
+          return product.title.toLowerCase().includes(trimmedSearchKey.toLowerCase());
+      });
+    }
+
+    if (selectedCategory) {
+      filteredProducts = filteredProducts.filter(item => item.categoryId === selectedCategory)
+    }
+  }
+
+function handleCategoryChange(event){
+  selectedCategory = event.detail;
+  searchProducts()
 }
-
-
 </script>
 
 <div class="my-8">
@@ -59,9 +68,7 @@ async function searchProducts() {
   </div>
 </div>
   
-
-
-  <Filter {categories} {fetchProduct} />
+  <Filter {categories} {selectedCategory} on:change={handleCategoryChange}/>
 
   <ProductCard products={filteredProducts} />
 </div>
