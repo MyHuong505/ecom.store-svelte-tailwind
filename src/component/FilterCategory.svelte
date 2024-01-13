@@ -1,7 +1,7 @@
 <script>
   export let categories;
   export let selectedCategory;
-  export let fetchProduct;
+
   import {createEventDispatcher} from 'svelte';
   const dispatch = createEventDispatcher();
 

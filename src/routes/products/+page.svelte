@@ -1,6 +1,6 @@
 <script>
   import ProductCard from '../../component/ProductCard.svelte';
-  import Filter from '../../component/Filter.svelte';
+  import FilterCategory from '../../component/FilterCategory.svelte';
   import Footer from '../../component/Footer.svelte';
 
   import { onMount } from 'svelte';
@@ -28,7 +28,7 @@
     categories = await res.json();
   }
 
-  async function searchProducts() {
+  async function filterProducts() {
     const trimmedSearchKey = searchKey.trim();
     filteredProducts = products;
 
@@ -45,7 +45,7 @@
 
 function handleCategoryChange(event){
   selectedCategory = event.detail;
-  searchProducts()
+  filterProducts()
 }
 </script>
 
@@ -61,14 +61,14 @@ function handleCategoryChange(event){
     />
     <button
       class="border border-primary border-l-0 bg-primary text-white rounded-r py-2 px-4 hover:bg-primary-dark"
-      on:click={searchProducts} 
+      on:click={filterProducts} 
     >
       Search
     </button>
   </div>
 </div>
   
-  <Filter {categories} {selectedCategory} on:change={handleCategoryChange}/>
+  <FilterCategory {categories} {selectedCategory} on:change={handleCategoryChange}/>
 
   <ProductCard products={filteredProducts} />
 </div>
